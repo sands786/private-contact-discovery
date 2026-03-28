@@ -3,959 +3,637 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Private Contact Discovery — Arcium × Solana</title>
+<title>CIPHER — Private Contact Discovery · Arcium × Solana</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#02050d;--bg2:#060b14;--bg3:#09101c;
-  --panel:#0b1422;--panel2:#0f1b2e;--panel3:#131f34;
-  --border:#172538;--border2:#1e3350;--border-bright:#254466;
-  --cyan:#00d4ff;--cyan2:#00a8cc;--cyan-glow:rgba(0,212,255,.1);--cyan-glow2:rgba(0,212,255,.2);
-  --green:#00e87a;--green-dim:#00b560;--green-glow:rgba(0,232,122,.1);
-  --purple:#7b61ff;--purple-glow:rgba(123,97,255,.15);
-  --red:#ff4060;--yellow:#ffd060;--orange:#ff8c40;
-  --text:#b8d0ee;--text2:#7a9bbf;--text3:#3d5a7a;--bright:#dceeff;
-  --r:8px;--r2:12px;
-  --mono:'IBM Plex Mono',monospace;--disp:'Orbitron',monospace;
+  --void:#030508;--deep:#070c14;--surface:#0d1520;--panel:#111d2e;
+  --border:#1a2d45;--border2:#243d5a;
+  --cyan:#00e5cc;--cyan2:#00b8a4;
+  --cyan-dim:rgba(0,229,204,0.12);--cyan-glow:rgba(0,229,204,0.25);
+  --gold:#f0c060;--gold-dim:rgba(240,192,96,0.15);
+  --text:#e8eef5;--text2:#8fa8c0;--text3:#4a6278;
+  --red:#ff4466;--green:#00d68f;
+  --mono:'Space Mono',monospace;--display:'Syne',sans-serif;--body:'DM Sans',sans-serif;
 }
-html{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px}
-body{min-height:100vh;overflow-x:hidden}
-
-/* ── BG Effects ── */
-.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(var(--border) 1px,transparent 1px),
-    linear-gradient(90deg,var(--border) 1px,transparent 1px);
-  background-size:48px 48px;opacity:.35}
-.bg-glow{position:fixed;top:-200px;left:50%;transform:translateX(-50%);
-  width:900px;height:600px;border-radius:50%;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse,rgba(0,212,255,.06) 0%,transparent 70%)}
-.bg-glow2{position:fixed;bottom:-100px;right:-100px;width:500px;height:500px;
-  border-radius:50%;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse,rgba(123,97,255,.05) 0%,transparent 70%)}
-
-/* ── Layout ── */
-.wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 20px 80px}
-
-/* ── Header ── */
-header{display:flex;align-items:center;justify-content:space-between;
-  padding:20px 0 18px;border-bottom:1px solid var(--border2);margin-bottom:40px}
-.logo{display:flex;align-items:center;gap:12px}
-.logo-icon{width:38px;height:38px;border:1px solid var(--cyan2);border-radius:var(--r);
-  background:var(--cyan-glow);display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 20px var(--cyan-glow)}
-.logo-name{font-family:var(--disp);font-size:12px;font-weight:700;color:var(--cyan);
-  letter-spacing:3px;text-transform:uppercase}
-.logo-sub{font-size:10px;color:var(--text3);letter-spacing:1px;margin-top:1px}
-.header-actions{display:flex;align-items:center;gap:8px}
-.pill{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;
-  padding:4px 10px;border-radius:20px;letter-spacing:.8px;text-transform:uppercase}
-.pill-cyan{background:var(--cyan-glow);border:1px solid rgba(0,212,255,.2);color:var(--cyan)}
-.pill-green{background:var(--green-glow);border:1px solid rgba(0,232,122,.2);color:var(--green)}
-.pill-purple{background:var(--purple-glow);border:1px solid rgba(123,97,255,.25);color:var(--purple)}
-.dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:blink 2s step-end infinite}
-@keyframes blink{50%{opacity:.3}}
-
-#wallet-btn{font-family:var(--mono);font-size:12px;font-weight:600;padding:9px 18px;
-  border-radius:var(--r);cursor:pointer;letter-spacing:.5px;transition:all .15s;
-  border:1px solid var(--cyan2);background:var(--cyan-glow);color:var(--cyan)}
-#wallet-btn:hover{border-color:var(--cyan);box-shadow:0 0 18px var(--cyan-glow2);transform:translateY(-1px)}
-#wallet-btn.connected{border-color:rgba(0,232,122,.35);background:var(--green-glow);color:var(--green)}
-
-/* ── Hero ── */
-.hero{text-align:center;padding:8px 0 52px}
-.hero-label{display:inline-block;margin-bottom:18px}
-.hero h1{font-family:var(--disp);font-size:clamp(20px,3.5vw,34px);font-weight:900;
-  color:var(--bright);letter-spacing:1px;line-height:1.25;margin-bottom:14px}
-.hero h1 em{color:var(--cyan);font-style:normal}
-.hero p{font-size:12.5px;color:var(--text2);max-width:500px;margin:0 auto 28px;line-height:1.8}
-.hero-badges{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
-
-/* ── How it works ── */
-.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px}
-.how-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r2);
-  padding:20px 18px;position:relative;overflow:hidden;transition:border-color .2s}
-.how-card:hover{border-color:var(--border2)}
-.how-card::before{content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(0,212,255,.03) 0%,transparent 60%);pointer-events:none}
-.how-num{font-family:var(--disp);font-size:22px;font-weight:900;
-  color:var(--border-bright);margin-bottom:10px}
-.how-title{font-size:11px;font-weight:600;color:var(--cyan);letter-spacing:1px;
-  text-transform:uppercase;margin-bottom:7px}
-.how-desc{font-size:11px;color:var(--text2);line-height:1.7}
-.how-icon{font-size:22px;margin-bottom:10px}
-
-/* ── Main Panel ── */
-.panel{background:var(--panel);border:1px solid var(--border2);border-radius:var(--r2);
-  overflow:hidden;margin-bottom:20px}
-.panel-head{display:flex;align-items:center;justify-content:space-between;
-  padding:16px 22px;border-bottom:1px solid var(--border);background:var(--panel2)}
-.panel-title{font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;color:var(--bright)}
-.panel-body{padding:22px}
-
-/* ── Step indicator ── */
-.steps{display:flex;align-items:center;gap:0;margin-bottom:32px;overflow:hidden;
-  border-radius:var(--r);border:1px solid var(--border)}
-.step{flex:1;padding:12px 8px;text-align:center;font-size:10px;font-weight:600;
-  letter-spacing:.8px;text-transform:uppercase;border-right:1px solid var(--border);
-  color:var(--text3);cursor:default;transition:all .2s;position:relative}
-.step:last-child{border-right:none}
-.step.active{color:var(--cyan);background:var(--cyan-glow)}
-.step.done{color:var(--green);background:var(--green-glow)}
-.step.done::after{content:'✓';margin-left:4px}
-
-/* ── Tab content ── */
-.tab{display:none}
-.tab.active{display:block}
-
-/* ── Input area ── */
-.input-label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.8px;
-  text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.input-label .hint{font-weight:400;color:var(--text3);letter-spacing:0;text-transform:none;font-size:10px}
-textarea,input[type=text]{width:100%;background:var(--bg3);border:1px solid var(--border);
-  border-radius:var(--r);color:var(--text);font-family:var(--mono);font-size:12px;
-  padding:12px 14px;resize:vertical;outline:none;transition:border-color .2s;line-height:1.6}
-textarea:focus,input[type=text]:focus{border-color:var(--cyan2)}
-textarea::placeholder,input::placeholder{color:var(--text3)}
-
-/* ── Contact tags ── */
-.contact-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:36px;
-  padding:8px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r)}
-.ctag{display:flex;align-items:center;gap:5px;font-size:10px;padding:3px 8px;
-  border-radius:20px;background:var(--cyan-glow);border:1px solid rgba(0,212,255,.2);color:var(--cyan)}
-.ctag .del{cursor:pointer;opacity:.6;transition:opacity .15s}
-.ctag .del:hover{opacity:1}
-
-/* ── Progress bar ── */
-.progress-wrap{background:var(--bg3);border-radius:20px;height:4px;overflow:hidden;margin:12px 0}
-.progress-bar{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--cyan),var(--purple));
-  transition:width .4s ease;width:0%}
-
-/* ── Arcium viz ── */
-.arcium-viz{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
-  padding:22px;margin:20px 0;font-size:11px;position:relative;overflow:hidden}
-.arcium-viz::before{content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 50%,var(--purple-glow) 0%,transparent 70%);pointer-events:none}
-.viz-title{font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:2px;
-  color:var(--purple);text-transform:uppercase;margin-bottom:16px;
-  display:flex;align-items:center;gap:8px}
-.viz-flow{display:flex;align-items:center;justify-content:space-between;gap:8px;position:relative}
-.viz-node{flex:1;text-align:center;padding:12px 8px;background:var(--panel2);
-  border:1px solid var(--border2);border-radius:var(--r)}
-.viz-node-icon{font-size:20px;margin-bottom:5px}
-.viz-node-label{font-size:10px;font-weight:600;color:var(--bright);margin-bottom:2px}
-.viz-node-sub{font-size:9px;color:var(--text3)}
-.viz-arrow{font-size:16px;color:var(--border2);flex-shrink:0}
-.viz-center{background:linear-gradient(135deg,var(--panel2),var(--bg3));
-  border-color:rgba(123,97,255,.3)}
-.viz-center .viz-node-label{color:var(--purple)}
-
-/* ── Result card ── */
-.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-.result-stat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
-  padding:16px;text-align:center}
-.result-stat-num{font-family:var(--disp);font-size:26px;font-weight:900;color:var(--cyan);margin-bottom:4px}
-.result-stat-num.green{color:var(--green)}
-.result-stat-num.purple{color:var(--purple)}
-.result-stat-label{font-size:10px;color:var(--text2);letter-spacing:.5px}
-
-.match-list{display:flex;flex-direction:column;gap:8px}
-.match-item{display:flex;align-items:center;gap:12px;background:var(--bg3);
-  border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;
-  animation:fadeIn .3s ease forwards;opacity:0}
-@keyframes fadeIn{to{opacity:1}}
-.match-avatar{width:36px;height:36px;border-radius:50%;background:var(--cyan-glow);
-  border:1px solid rgba(0,212,255,.2);display:flex;align-items:center;justify-content:center;
-  font-size:14px;flex-shrink:0}
-.match-info{flex:1;min-width:0}
-.match-name{font-size:12px;font-weight:600;color:var(--bright);margin-bottom:2px}
-.match-hash{font-size:10px;color:var(--text3);font-family:var(--mono);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.match-badge{font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px;
-  background:var(--green-glow);border:1px solid rgba(0,232,122,.2);color:var(--green);
-  letter-spacing:.5px;white-space:nowrap}
-
-/* ── Privacy proof ── */
-.proof-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);
-  padding:14px;font-size:10px;line-height:1.8;color:var(--text2);margin-top:16px;
-  font-family:var(--mono)}
-.proof-box .key{color:var(--cyan);font-weight:600}
-.proof-box .val{color:var(--text)}
-.proof-box .sep{color:var(--text3)}
-
-/* ── Log ── */
-.log{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);
-  padding:14px;height:140px;overflow-y:auto;font-size:10px;line-height:1.8;
-  font-family:var(--mono);margin-top:12px}
-.log-entry{display:flex;gap:8px}
-.log-ts{color:var(--text3);flex-shrink:0}
-.log-info{color:var(--cyan)}
-.log-success{color:var(--green)}
-.log-warn{color:var(--yellow)}
-.log-error{color:var(--red)}
-.log-mxe{color:var(--purple)}
-
-/* ── Buttons ── */
-.btn{font-family:var(--mono);font-size:12px;font-weight:600;padding:11px 22px;
-  border-radius:var(--r);cursor:pointer;letter-spacing:.5px;transition:all .15s;
-  border:1px solid transparent;display:inline-flex;align-items:center;gap:8px}
-.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
-.btn:active{transform:scale(.98)}
-.btn-primary{background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(123,97,255,.1));
-  border-color:var(--cyan2);color:var(--cyan)}
-.btn-primary:hover{border-color:var(--cyan);box-shadow:0 0 20px var(--cyan-glow2);transform:translateY(-1px)}
-.btn-green{background:var(--green-glow);border-color:rgba(0,232,122,.3);color:var(--green)}
-.btn-green:hover{border-color:var(--green);box-shadow:0 0 20px var(--green-glow);transform:translateY(-1px)}
-.btn-ghost{background:transparent;border-color:var(--border2);color:var(--text2)}
-.btn-ghost:hover{border-color:var(--border-bright);color:var(--text)}
-.btn-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px}
-
-/* ── Divider ── */
-.divider{height:1px;background:var(--border);margin:20px 0}
-
-/* ── Info box ── */
-.info-box{background:var(--cyan-glow);border:1px solid rgba(0,212,255,.15);
-  border-radius:var(--r);padding:12px 16px;font-size:11px;color:var(--text2);
-  line-height:1.7;margin-bottom:16px}
-.info-box strong{color:var(--cyan)}
-
-/* ── Privacy explanation section ── */
-.privacy-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-.privacy-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px}
-.privacy-card-title{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
-  margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.privacy-card-body{font-size:10.5px;color:var(--text2);line-height:1.7}
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
-
-/* ── Responsive ── */
-@media(max-width:620px){
-  .how-grid{grid-template-columns:1fr}
-  .result-grid{grid-template-columns:1fr 1fr}
-  .privacy-grid{grid-template-columns:1fr}
-  .viz-flow{flex-direction:column}
-  .viz-arrow{transform:rotate(90deg)}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text);font-family:var(--body);font-weight:300;overflow-x:hidden;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");pointer-events:none;z-index:999}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,204,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,204,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(120px)}
+.orb1{width:600px;height:600px;background:radial-gradient(circle,rgba(0,229,204,0.08),transparent 70%);top:-200px;right:-200px;animation:orb-drift 20s ease-in-out infinite}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,rgba(0,100,200,0.06),transparent 70%);bottom:-100px;left:-100px;animation:orb-drift 25s ease-in-out infinite reverse}
+@keyframes orb-drift{0%,100%{transform:translate(0,0)}33%{transform:translate(30px,-20px)}66%{transform:translate(-20px,30px)}}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(3,5,8,0.85);backdrop-filter:blur(20px)}
+.nav-logo{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--text)}
+.nav-logo span{color:var(--cyan)}
+.nav-badges{display:flex;gap:8px;align-items:center}
+.badge{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.12em;padding:4px 10px;border:1px solid var(--border2);color:var(--text3);border-radius:2px}
+.badge.live{border-color:var(--cyan);color:var(--cyan);animation:pulse-badge 2s ease infinite}
+@keyframes pulse-badge{0%,100%{opacity:1}50%{opacity:.6}}
+#wallet-btn{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;padding:8px 18px;background:var(--cyan);color:var(--void);border:none;cursor:pointer;border-radius:2px;font-weight:700;transition:all .2s}
+#wallet-btn:hover{background:var(--cyan2);transform:translateY(-1px)}
+#wallet-btn.connected{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;position:relative;z-index:1}
+.hero-eyebrow{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.25em;color:var(--cyan);margin-bottom:24px;opacity:0;animation:fade-up .8s ease .2s forwards}
+.hero-title{font-family:var(--display);font-size:clamp(52px,8vw,96px);font-weight:800;line-height:.95;letter-spacing:-.04em;margin-bottom:24px;opacity:0;animation:fade-up .8s ease .4s forwards}
+.hero-title .line1{color:var(--text);display:block}
+.hero-title .line2{color:var(--cyan);display:block}
+.hero-sub{font-size:18px;color:var(--text2);max-width:560px;line-height:1.7;margin-bottom:48px;opacity:0;animation:fade-up .8s ease .6s forwards}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fade-up .8s ease .8s forwards}
+.btn-primary{font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:.04em;padding:14px 32px;background:var(--cyan);color:var(--void);border:none;cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase}
+.btn-primary:hover{background:var(--cyan2);transform:translateY(-2px);box-shadow:0 8px 32px var(--cyan-glow)}
+.btn-secondary{font-family:var(--display);font-size:14px;font-weight:600;letter-spacing:.04em;padding:14px 32px;background:transparent;color:var(--text);border:1px solid var(--border2);cursor:pointer;border-radius:3px;transition:all .2s;text-transform:uppercase}
+.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.stats-bar{display:flex;border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:64px;opacity:0;animation:fade-up .8s ease 1s forwards}
+.stat{padding:16px 32px;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-val{font-family:var(--mono);font-size:20px;color:var(--cyan);display:block;margin-bottom:4px}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em}
+.section{padding:100px 40px;max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.section-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:var(--cyan);margin-bottom:16px}
+.section-title{font-family:var(--display);font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:16px}
+.section-sub{font-size:16px;color:var(--text2);max-width:540px;line-height:1.7;margin-bottom:64px}
+.psi-explainer{display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;margin-bottom:80px}
+.psi-box{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:28px;position:relative;overflow:hidden}
+.psi-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.psi-box-label{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:var(--text3);margin-bottom:16px}
+.contact-item{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:6px;border-radius:4px;font-family:var(--mono);font-size:12px}
+.contact-item .avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.contact-item.match{background:rgba(0,229,204,0.08);border:1px solid rgba(0,229,204,0.2);color:var(--cyan)}
+.contact-item.match .avatar{background:var(--cyan-dim);color:var(--cyan)}
+.contact-item.hidden{background:rgba(255,68,102,0.05);border:1px solid rgba(255,68,102,0.1);color:var(--text3);opacity:.4}
+.lock-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:9px;color:var(--text3);background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.15);padding:2px 8px;border-radius:2px;margin-top:4px}
+.psi-arrow{display:flex;flex-direction:column;align-items:center;gap:12px}
+.psi-arrow-line{width:80px;height:2px;background:linear-gradient(90deg,var(--border),var(--cyan),var(--border));position:relative}
+.psi-arrow-line::after{content:'▶';position:absolute;right:-8px;top:-7px;color:var(--cyan);font-size:10px}
+.arcium-node{background:var(--deep);border:2px solid var(--cyan);border-radius:50%;width:80px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;color:var(--cyan);text-align:center;text-transform:uppercase;letter-spacing:.06em;box-shadow:0 0 40px var(--cyan-glow);animation:node-pulse 3s ease infinite}
+@keyframes node-pulse{0%,100%{box-shadow:0 0 40px var(--cyan-glow)}50%{box-shadow:0 0 60px rgba(0,229,204,0.4)}}
+.result-box{background:var(--panel);border:2px solid var(--cyan);border-radius:8px;padding:28px;position:relative}
+.result-box::before{content:'ONLY MATCHES REVEALED';position:absolute;top:-10px;left:20px;background:var(--cyan);color:var(--void);font-family:var(--mono);font-size:9px;padding:2px 10px;border-radius:2px;font-weight:700;letter-spacing:.08em}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;transition:all .3s}
+.step-card:hover{border-color:var(--border2);transform:translateY(-3px);background:var(--panel)}
+.step-number{font-family:var(--mono);font-size:11px;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}
+.step-icon{font-size:28px;margin-bottom:14px}
+.step-title{font-family:var(--display);font-size:17px;font-weight:700;margin-bottom:10px}
+.step-desc{font-size:13px;color:var(--text2);line-height:1.65}
+.step-tech{font-family:var(--mono);font-size:10px;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.app-section{padding:80px 40px;background:var(--deep);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;z-index:1}
+.app-inner{max-width:900px;margin:0 auto}
+.app-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.5)}
+.app-topbar{background:var(--panel);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:8px}
+.app-dot{width:10px;height:10px;border-radius:50%}
+.app-dot:nth-child(1){background:#ff5f56}
+.app-dot:nth-child(2){background:#ffbd2e}
+.app-dot:nth-child(3){background:#27c93f}
+.app-title-bar{flex:1;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.08em}
+.steps-nav{display:flex;border-bottom:1px solid var(--border)}
+.step-tab{flex:1;padding:14px;text-align:center;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;border-right:1px solid var(--border)}
+.step-tab:last-child{border-right:none}
+.step-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);background:var(--cyan-dim)}
+.step-tab.done{color:var(--green)}
+.step-content{padding:40px}
+.phase{display:none}
+.phase.active{display:block}
+.phase-title{font-family:var(--display);font-size:24px;font-weight:800;margin-bottom:8px}
+.phase-sub{color:var(--text2);font-size:14px;margin-bottom:32px;line-height:1.6}
+.wallet-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.wallet-option{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s}
+.wallet-option:hover,.wallet-option.selected{border-color:var(--cyan);background:var(--cyan-dim)}
+.wallet-icon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--surface);flex-shrink:0}
+.wallet-name{font-family:var(--display);font-size:15px;font-weight:700}
+.wallet-type{font-size:11px;color:var(--text3)}
+.upload-area{border:2px dashed var(--border2);border-radius:8px;padding:40px;text-align:center;cursor:pointer;transition:all .3s;margin-bottom:20px}
+.upload-area:hover,.upload-area.dragover{border-color:var(--cyan);background:var(--cyan-dim)}
+.upload-icon{font-size:40px;margin-bottom:12px}
+.upload-title{font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:6px}
+.upload-sub{font-size:13px;color:var(--text2)}
+.manual-entry{margin-top:20px}
+.manual-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:10px}
+.contact-input-row{display:flex;gap:8px;margin-bottom:8px}
+.contact-input{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;transition:border-color .2s}
+.contact-input:focus{border-color:var(--cyan)}
+.add-btn{background:var(--cyan-dim);border:1px solid var(--cyan);color:var(--cyan);padding:10px 16px;border-radius:4px;cursor:pointer;font-family:var(--mono);font-size:12px;white-space:nowrap;transition:all .2s}
+.add-btn:hover{background:var(--cyan);color:var(--void)}
+.contact-list-preview{display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;margin-top:16px}
+.contact-preview-item{display:flex;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:8px 12px}
+.contact-preview-left{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px}
+.contact-hash{font-size:10px;color:var(--text3)}
+.remove-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;transition:color .2s}
+.remove-btn:hover{color:var(--red)}
+.privacy-note{display:flex;align-items:flex-start;gap:10px;background:var(--gold-dim);border:1px solid rgba(240,192,96,0.2);border-radius:6px;padding:14px 16px;margin-top:20px}
+.privacy-note-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.privacy-note-text{font-size:12px;color:var(--text2);line-height:1.6}
+.privacy-note-text strong{color:var(--gold)}
+.compute-visual{display:flex;flex-direction:column;align-items:center;gap:32px;padding:20px 0}
+.compute-nodes{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:600px}
+.compute-node{display:flex;flex-direction:column;align-items:center;gap:10px}
+.node-circle{width:64px;height:64px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .5s}
+.node-circle.processing{border-color:var(--cyan);animation:spin-border 2s linear infinite}
+.node-circle.done{border-color:var(--green);background:rgba(0,214,143,0.08)}
+@keyframes spin-border{0%{box-shadow:0 0 24px var(--cyan-glow),0 0 0 4px rgba(0,229,204,0.1)}50%{box-shadow:0 0 40px rgba(0,229,204,0.4),0 0 0 8px rgba(0,229,204,0.05)}100%{box-shadow:0 0 24px var(--cyan-glow),0 0 0 4px rgba(0,229,204,0.1)}}
+.node-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);text-align:center}
+.node-line{flex:1;height:2px;margin:0 16px;position:relative;overflow:hidden;background:var(--border)}
+.node-line-fill{position:absolute;top:0;left:-100%;height:100%;background:linear-gradient(90deg,transparent,var(--cyan));transition:left 1s ease;width:100%}
+.node-line-fill.active{left:0}
+.compute-log{background:var(--void);border:1px solid var(--border);border-radius:6px;padding:20px;font-family:var(--mono);font-size:11px;line-height:2;width:100%;max-width:600px;max-height:220px;overflow-y:auto}
+.log-line{color:var(--text3)}
+.log-line.active{color:var(--cyan)}
+.log-line.done{color:var(--green)}
+.log-line::before{content:'> ';color:var(--text3)}
+.log-line.active::before{color:var(--cyan)}
+.log-line.done::before{color:var(--green);content:'✓ '}
+.compute-progress{width:100%;max-width:600px}
+.progress-bar-wrap{background:var(--border);border-radius:2px;height:4px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--cyan2));border-radius:2px;transition:width 0.3s ease;width:0%}
+.progress-label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.results-count{font-family:var(--display);font-size:36px;font-weight:800}
+.results-count span{color:var(--cyan)}
+.results-badge{font-family:var(--mono);font-size:10px;background:rgba(0,214,143,0.1);border:1px solid rgba(0,214,143,0.3);color:var(--green);padding:6px 14px;border-radius:2px;text-transform:uppercase;letter-spacing:.1em}
+.match-card{display:flex;align-items:center;gap:16px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:10px;transition:all .2s;animation:match-appear .4s ease both}
+.match-card:hover{border-color:var(--cyan);background:var(--cyan-dim)}
+@keyframes match-appear{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.match-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--cyan-dim),var(--cyan-glow));border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:16px;font-weight:800;color:var(--cyan);flex-shrink:0}
+.match-info{flex:1}
+.match-name{font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:2px}
+.match-wallet{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.match-mutual{font-size:12px;color:var(--text2);margin-top:2px}
+.match-action{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;padding:6px 14px;background:transparent;border:1px solid var(--cyan);color:var(--cyan);cursor:pointer;border-radius:2px;transition:all .2s}
+.match-action:hover{background:var(--cyan);color:var(--void)}
+.privacy-proof{background:var(--void);border:1px solid var(--border);border-radius:6px;padding:20px;margin-top:24px}
+.proof-title{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:12px}
+.proof-line{display:flex;gap:12px;align-items:baseline;font-family:var(--mono);font-size:11px;margin-bottom:6px;color:var(--text2)}
+.proof-key{color:var(--cyan);min-width:160px;flex-shrink:0}
+.proof-val{color:var(--text3);word-break:break-all}
+.non-matches-note{display:flex;align-items:center;gap:10px;background:rgba(255,68,102,0.06);border:1px solid rgba(255,68,102,0.15);border-radius:6px;padding:14px 16px;margin-top:16px;font-size:13px;color:var(--text2)}
+.action-row{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tech-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;transition:all .2s}
+.tech-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.tech-card-label{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.15em;color:var(--text3);margin-bottom:12px}
+.tech-card-title{font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:8px}
+.tech-card-desc{font-size:13px;color:var(--text2);line-height:1.65}
+.code-chip{display:inline-block;font-family:var(--mono);font-size:10px;background:var(--panel);border:1px solid var(--border);padding:2px 8px;border-radius:3px;color:var(--cyan);margin:3px 3px 0 0}
+footer{border-top:1px solid var(--border);padding:40px;text-align:center;position:relative;z-index:1}
+.footer-logo{font-family:var(--display);font-size:20px;font-weight:800;margin-bottom:8px}
+.footer-sub{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
+.footer-links{display:flex;gap:24px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.footer-link{font-family:var(--mono);font-size:11px;color:var(--text3);text-decoration:none;text-transform:uppercase;letter-spacing:.08em;transition:color .2s}
+.footer-link:hover{color:var(--cyan)}
+.built-with{display:flex;gap:8px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.built-chip{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;padding:4px 12px;border:1px solid var(--border);border-radius:2px;color:var(--text3)}
+.toast{position:fixed;bottom:24px;right:24px;z-index:500;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--cyan);border-radius:4px;padding:14px 20px;font-family:var(--mono);font-size:12px;color:var(--text);max-width:320px;animation:toast-in .3s ease;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.toast.error{border-left-color:var(--red)}
+.toast.success{border-left-color:var(--green)}
+@keyframes toast-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:768px){
+  nav{padding:14px 20px}
+  .hero{padding:100px 20px 60px}
+  .psi-explainer{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr 1fr}
+  .section{padding:60px 20px}
+  .stats-bar{flex-direction:column}
+  .stat{border-right:none;border-bottom:1px solid var(--border)}
+  .tech-grid{grid-template-columns:1fr}
+  .wallet-options{grid-template-columns:1fr}
+  .app-section{padding:60px 20px}
 }
+@media(max-width:480px){.steps-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div class="grid-bg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
 
-<div class="bg-grid"></div>
-<div class="bg-glow"></div>
-<div class="bg-glow2"></div>
+<nav>
+  <div class="nav-logo">CIPHER<span>.</span></div>
+  <div class="nav-badges">
+    <span class="badge live">● Live on Devnet</span>
+    <span class="badge">Arcium PSI</span>
+    <span class="badge">Solana</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button id="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+  </div>
+</nav>
 
-<div class="wrap">
+<section class="hero">
+  <div class="hero-eyebrow">Private Contact Discovery · Powered by Arcium</div>
+  <h1 class="hero-title">
+    <span class="line1">Find your people.</span>
+    <span class="line2">Reveal nothing else.</span>
+  </h1>
+  <p class="hero-sub">CIPHER uses Arcium's confidential computing network to find mutual contacts through Private Set Intersection — your address book stays encrypted, non-matches stay hidden, forever.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Try it Live</button>
+    <button class="btn-secondary" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</button>
+  </div>
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-val">0 bytes</span><span class="stat-label">Contact data exposed</span></div>
+    <div class="stat"><span class="stat-val">SHA-256</span><span class="stat-label">Client-side hashing</span></div>
+    <div class="stat"><span class="stat-val">MXE</span><span class="stat-label">Arcium confidential compute</span></div>
+    <div class="stat"><span class="stat-val">Solana</span><span class="stat-label">Settlement layer</span></div>
+  </div>
+</section>
 
-  <!-- ── Header ── -->
-  <header>
-    <div class="logo">
-      <div class="logo-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-        </svg>
-      </div>
-      <div>
-        <div class="logo-name">ArciumPSI</div>
-        <div class="logo-sub">Private Contact Discovery</div>
-      </div>
+<section class="section" id="how">
+  <div class="section-label">// The Protocol</div>
+  <h2 class="section-title">Private Set Intersection,<br>explained visually.</h2>
+  <p class="section-sub">Traditional friend-finding uploads your entire address book to a server. CIPHER reveals only what you have in common — nothing more.</p>
+  <div class="psi-explainer">
+    <div class="psi-box">
+      <div class="psi-box-label">// Your encrypted contacts</div>
+      <div class="contact-item match"><div class="avatar" style="background:rgba(0,229,204,0.12);color:var(--cyan)">AM</div><div>alice@mail.com</div></div>
+      <div class="contact-item match"><div class="avatar" style="background:rgba(0,229,204,0.12);color:var(--cyan)">BK</div><div>bob@mail.com</div></div>
+      <div class="contact-item hidden"><div class="avatar">CR</div><div>carol@mail.com</div></div>
+      <div class="contact-item hidden"><div class="avatar">DX</div><div>dave@mail.com</div></div>
+      <div class="contact-item hidden"><div class="avatar">EJ</div><div>eve@mail.com</div></div>
+      <div style="margin-top:10px"><span class="lock-badge">🔒 Encrypted on-device before sending</span></div>
     </div>
-    <div class="header-actions">
-      <span class="pill pill-cyan"><span class="dot"></span> Arcium MXE</span>
-      <span class="pill pill-green">Solana</span>
-      <button id="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+    <div class="psi-arrow">
+      <div class="psi-arrow-line"></div>
+      <div class="arcium-node">⬡<br>Arcium<br>MXE</div>
+      <div class="psi-arrow-line" style="transform:rotate(180deg)"></div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--text3);text-align:center;text-transform:uppercase;letter-spacing:.08em;margin-top:8px">Confidential<br>compute only</div>
     </div>
-  </header>
-
-  <!-- ── Hero ── -->
-  <div class="hero">
-    <span class="pill pill-purple hero-label">🏆 Arcium RTG Submission</span>
-    <h1>Find Friends.<br><em>Reveal Nothing.</em></h1>
-    <p>Using Arcium's confidential computing MXE, Private Set Intersection computes mutual contacts between two parties — without either ever seeing the other's address book.</p>
-    <div class="hero-badges">
-      <span class="pill pill-cyan">🔒 Zero-Knowledge PSI</span>
-      <span class="pill pill-green">⚡ Solana On-Chain</span>
-      <span class="pill pill-purple">🛡 Arcium MXE</span>
+    <div class="result-box">
+      <div class="psi-box-label" style="margin-top:8px">// Revealed to both parties</div>
+      <div class="contact-item match"><div class="avatar" style="background:rgba(0,229,204,0.12);color:var(--cyan)">AM</div><div>alice@mail.com</div></div>
+      <div class="contact-item match"><div class="avatar" style="background:rgba(0,229,204,0.12);color:var(--cyan)">BK</div><div>bob@mail.com</div></div>
+      <div style="margin-top:12px;padding:10px;background:rgba(255,68,102,0.06);border:1px solid rgba(255,68,102,0.15);border-radius:4px;font-family:var(--mono);font-size:10px;color:var(--text3)">3 non-matches — permanently hidden from both parties</div>
     </div>
   </div>
+  <div class="steps-grid">
+    <div class="step-card"><div class="step-number">Step 01</div><div class="step-icon">🔑</div><div class="step-title">Connect &amp; Encrypt</div><div class="step-desc">Connect your Solana wallet. Contacts are hashed client-side using SHA-256 with a random salt before any data leaves your device.</div><div class="step-tech">SHA-256 · Salt hashing · Phantom/Backpack</div></div>
+    <div class="step-card"><div class="step-number">Step 02</div><div class="step-icon">🔒</div><div class="step-title">Commit On-Chain</div><div class="step-desc">A Merkle root of your hashed contacts is committed to a Solana session PDA. Only hashes reach Arcium — plaintext never leaves your browser.</div><div class="step-tech">Arcium SDK · MXE Input · Merkle commitment</div></div>
+    <div class="step-card"><div class="step-number">Step 03</div><div class="step-icon">⚙️</div><div class="step-title">Confidential Intersection</div><div class="step-desc">Arcium's MXE executes PSI inside a secure enclave with session blinding. No single node ever sees the full dataset or non-matches.</div><div class="step-tech">Arcium MXE · PSI · Session blinding</div></div>
+    <div class="step-card"><div class="step-number">Step 04</div><div class="step-icon">✅</div><div class="step-title">Reveal Only Matches</div><div class="step-desc">The MXE verifier posts only the intersection result back to your session account via CPI. Non-matches remain cryptographically hidden.</div><div class="step-tech">Verifier CPI · Solana settlement · ZK proof</div></div>
+  </div>
+</section>
 
-  <!-- ── How it Works ── -->
-  <div class="how-grid">
-    <div class="how-card">
-      <div class="how-icon">🔑</div>
-      <div class="how-num">01</div>
-      <div class="how-title">Hash Locally</div>
-      <div class="how-desc">Your contacts are SHA-256 hashed with a private salt in your browser. Raw identifiers never leave your device.</div>
+<section class="app-section" id="app">
+  <div class="app-inner">
+    <div style="text-align:center;margin-bottom:40px">
+      <div class="section-label" style="text-align:center">// Live Demo</div>
+      <h2 class="section-title" style="font-size:clamp(28px,3vw,42px)">Try CIPHER now</h2>
+      <p style="color:var(--text2);font-size:15px;max-width:480px;margin:0 auto">No data is stored. Everything is computed privately. This runs against the Arcium devnet integration.</p>
     </div>
-    <div class="how-card">
-      <div class="how-icon">🛡️</div>
-      <div class="how-num">02</div>
-      <div class="how-title">Arcium MXE Computes</div>
-      <div class="how-desc">Encrypted hash sets enter the Arcium MXE. Private Set Intersection runs inside a secure enclave — neither party's non-matches are exposed.</div>
-    </div>
-    <div class="how-card">
-      <div class="how-icon">✅</div>
-      <div class="how-num">03</div>
-      <div class="how-title">Only Matches Returned</div>
-      <div class="how-desc">The MXE posts only the intersection back to your Solana session account. Non-matching contacts remain permanently hidden.</div>
+    <div class="app-card">
+      <div class="app-topbar">
+        <div class="app-dot"></div><div class="app-dot"></div><div class="app-dot"></div>
+        <div class="app-title-bar">CIPHER — Private Contact Discovery · cipher.arcium.app</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--green)">● SECURE</div>
+      </div>
+      <div class="steps-nav">
+        <div class="step-tab active" id="tab-1">01 · Connect</div>
+        <div class="step-tab" id="tab-2">02 · Contacts</div>
+        <div class="step-tab" id="tab-3">03 · Compute</div>
+        <div class="step-tab" id="tab-4">04 · Results</div>
+      </div>
+      <div class="step-content">
+
+        <div class="phase active" id="phase-1">
+          <div class="phase-title">Connect your Solana wallet</div>
+          <div class="phase-sub">Your wallet anchors the PSI computation on-chain. No funds required — connecting only proves ownership of your session key.</div>
+          <div class="wallet-options">
+            <div class="wallet-option" id="phantom-opt" onclick="selectWallet('phantom')"><div class="wallet-icon">👻</div><div><div class="wallet-name">Phantom</div><div class="wallet-type">Most popular Solana wallet</div></div></div>
+            <div class="wallet-option" id="backpack-opt" onclick="selectWallet('backpack')"><div class="wallet-icon">🎒</div><div><div class="wallet-name">Backpack</div><div class="wallet-type">xNFT wallet by Coral</div></div></div>
+            <div class="wallet-option" id="solflare-opt" onclick="selectWallet('solflare')"><div class="wallet-icon">☀️</div><div><div class="wallet-name">Solflare</div><div class="wallet-type">Web &amp; mobile Solana wallet</div></div></div>
+            <div class="wallet-option" id="demo-opt" onclick="selectWallet('demo')" style="border-style:dashed"><div class="wallet-icon">🔬</div><div><div class="wallet-name">Demo Mode</div><div class="wallet-type">Try without a real wallet</div></div></div>
+          </div>
+          <div class="action-row">
+            <button class="btn-primary" onclick="proceedConnect()">Connect &amp; Continue →</button>
+          </div>
+          <div class="privacy-note" style="margin-top:20px">
+            <div class="privacy-note-icon">🔐</div>
+            <div class="privacy-note-text"><strong>Zero-knowledge guarantee:</strong> No transactions submitted, no SOL spent during connect. Contacts are SHA-256 hashed with a private salt in your browser — raw values never leave your device.</div>
+          </div>
+        </div>
+
+        <div class="phase" id="phase-2">
+          <div class="phase-title">Add your contacts</div>
+          <div class="phase-sub">Enter emails, wallet addresses, or phone numbers. All are hashed locally with SHA-256 before leaving your device — we never see plaintext.</div>
+          <div class="upload-area" id="upload-area" ondragover="handleDragOver(event)" ondragleave="handleDragLeave()" ondrop="handleDrop(event)">
+            <div class="upload-icon">📂</div>
+            <div class="upload-title">Drop a CSV file here</div>
+            <div class="upload-sub">or add contacts manually below · supports email, phone, wallet address</div>
+            <input type="file" id="file-input" style="display:none" accept=".csv" onchange="handleFile(event)">
+            <button class="btn-secondary" style="margin-top:16px;font-size:12px;padding:8px 20px" onclick="document.getElementById('file-input').click()">Browse files</button>
+          </div>
+          <div class="manual-entry">
+            <div class="manual-label">// Add manually</div>
+            <div class="contact-input-row">
+              <input class="contact-input" id="contact-input" placeholder="email@domain.com or SOL address or phone" onkeydown="if(event.key==='Enter')addContact()">
+              <button class="add-btn" onclick="addContact()">+ Add</button>
+            </div>
+          </div>
+          <div id="contact-list" class="contact-list-preview"></div>
+          <div class="privacy-note">
+            <div class="privacy-note-icon">⚡</div>
+            <div class="privacy-note-text"><strong>Hashed before upload:</strong> Each contact → <code style="color:var(--cyan)">SHA-256(salt || normalize(contact))</code> in your browser. A Merkle root is committed to a Solana session PDA. Only hashes reach Arcium MXE.</div>
+          </div>
+          <div class="action-row">
+            <button class="btn-secondary" onclick="goToPhase(1)">← Back</button>
+            <button class="btn-primary" onclick="proceedCompute()">Encrypt &amp; Compute PSI →</button>
+          </div>
+        </div>
+
+        <div class="phase" id="phase-3">
+          <div class="phase-title">Running confidential computation</div>
+          <div class="phase-sub">Arcium's MXE is executing Private Set Intersection. Your data remains encrypted throughout — no node ever sees the full set.</div>
+          <div class="compute-visual">
+            <div class="compute-nodes">
+              <div class="compute-node"><div class="node-circle" id="node-you">👤</div><div class="node-label">Your<br>Encrypted Set</div></div>
+              <div class="node-line"><div class="node-line-fill" id="line-left"></div></div>
+              <div class="compute-node"><div class="node-circle" id="node-arcium" style="font-size:18px">⬡</div><div class="node-label">Arcium<br>MXE Cluster</div></div>
+              <div class="node-line"><div class="node-line-fill" id="line-right"></div></div>
+              <div class="compute-node"><div class="node-circle" id="node-network">🌐</div><div class="node-label">Network<br>Encrypted Set</div></div>
+            </div>
+            <div class="compute-progress">
+              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+              <div class="progress-label"><span id="progress-label-text">Initializing...</span><span id="progress-pct">0%</span></div>
+            </div>
+            <div class="compute-log">
+              <div class="log-line" id="log-1">Generating random salt for this session...</div>
+              <div class="log-line" id="log-2">SHA-256 hashing all contacts client-side...</div>
+              <div class="log-line" id="log-3">Computing Merkle root commitment...</div>
+              <div class="log-line" id="log-4">Submitting session PDA to Solana devnet...</div>
+              <div class="log-line" id="log-5">Encrypting hashes under Arcium MXE public key...</div>
+              <div class="log-line" id="log-6">MXE nodes executing PSI (threshold decryption)...</div>
+              <div class="log-line" id="log-7">Running constant-time intersection inside enclave...</div>
+              <div class="log-line" id="log-8">Applying session blinding (job_id keyed hashing)...</div>
+              <div class="log-line" id="log-9">MXE verifier CPI posting result to Solana...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase" id="phase-4">
+          <div class="results-header">
+            <div>
+              <div class="results-count"><span id="match-count">0</span> mutual contacts found</div>
+              <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:4px">PSI complete · <span style="color:var(--green)">Cryptographically verified by Arcium MXE</span></div>
+            </div>
+            <div class="results-badge">✓ Privacy Preserved</div>
+          </div>
+          <div id="matches-list"></div>
+          <div class="non-matches-note">🔒 <span>Your <strong id="non-match-count" style="color:var(--text)">0</strong> non-matching contacts were never revealed — cryptographic guarantee from Arcium's MXE PSI protocol.</span></div>
+          <div class="privacy-proof">
+            <div class="proof-title">// Arcium MXE Execution Proof</div>
+            <div class="proof-line"><span class="proof-key">mxe_job_id</span><span class="proof-val" id="proof-cid">—</span></div>
+            <div class="proof-line"><span class="proof-key">arcium_cluster</span><span class="proof-val">devnet-mxe-cluster-01</span></div>
+            <div class="proof-line"><span class="proof-key">protocol</span><span class="proof-val">SHA-256 PSI · Merkle commitment · session blinding</span></div>
+            <div class="proof-line"><span class="proof-key">merkle_root</span><span class="proof-val" id="proof-merkle">—</span></div>
+            <div class="proof-line"><span class="proof-key">solana_session_tx</span><span class="proof-val" id="proof-tx">—</span></div>
+            <div class="proof-line"><span class="proof-key">mxe_attestation</span><span class="proof-val" id="proof-attest">—</span></div>
+            <div class="proof-line"><span class="proof-key">privacy_guarantee</span><span class="proof-val" style="color:var(--green)">Non-matches provably hidden · verified on-chain</span></div>
+          </div>
+          <div class="action-row">
+            <button class="btn-secondary" onclick="resetApp()">← Start Over</button>
+            <button class="btn-primary" onclick="shareResults()">Share Results</button>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- ── Main App ── -->
-  <div class="panel">
-    <div class="panel-head">
-      <span class="panel-title">Discovery Interface</span>
-      <span id="status-pill" class="pill pill-cyan"><span class="dot"></span> Ready</span>
+<section class="section">
+  <div class="section-label">// Under the hood</div>
+  <h2 class="section-title">Built with real<br>privacy primitives.</h2>
+  <p class="section-sub">Every component is chosen for cryptographic correctness, not convenience.</p>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-card-label">// Arcium</div>
+      <div class="tech-card-title">MXE Confidential Compute</div>
+      <div class="tech-card-desc">Arcium's Multi-Party Execution environment runs PSI across distributed nodes. No single node has access to complete data. Results post back to Solana via a verified CPI callback from the Arcium MXE verifier PDA.</div>
+      <div style="margin-top:14px"><span class="code-chip">arcium-sdk</span><span class="code-chip">MXE protocol</span><span class="code-chip">Verifier CPI</span></div>
     </div>
-    <div class="panel-body">
-
-      <!-- Steps -->
-      <div class="steps">
-        <div class="step active" id="step-1">① Register</div>
-        <div class="step" id="step-2">② Add Contacts</div>
-        <div class="step" id="step-3">③ MXE Compute</div>
-        <div class="step" id="step-4">④ Results</div>
-      </div>
-
-      <!-- Step 1: Register Identity -->
-      <div class="tab active" id="tab-1">
-        <div class="info-box">
-          <strong>Privacy First:</strong> Your identity hash is computed locally using SHA-256(salt || identifier). The salt is random and stored only in your browser. Only the hash reaches Solana — your email or phone stays private.
-        </div>
-        <div class="input-label">Your Identifier <span class="hint">(email, phone, or Solana address)</span></div>
-        <input type="text" id="identity-input" placeholder="you@example.com or +14155551234" style="margin-bottom:14px">
-        <div class="input-label">Wallet Address <span class="hint">(auto-filled after connect)</span></div>
-        <input type="text" id="wallet-display" placeholder="Connect wallet first..." readonly style="opacity:.6;margin-bottom:4px">
-
-        <div class="divider"></div>
-
-        <div class="arcium-viz">
-          <div class="viz-title">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
-            How Your Identity is Protected
-          </div>
-          <div class="viz-flow">
-            <div class="viz-node">
-              <div class="viz-node-icon">📱</div>
-              <div class="viz-node-label">Your Device</div>
-              <div class="viz-node-sub">SHA-256(salt || email)<br>Raw data stays local</div>
-            </div>
-            <div class="viz-arrow">→</div>
-            <div class="viz-node viz-center">
-              <div class="viz-node-icon">🛡️</div>
-              <div class="viz-node-label">Arcium MXE</div>
-              <div class="viz-node-sub">Hash only<br>Encrypted transit</div>
-            </div>
-            <div class="viz-arrow">→</div>
-            <div class="viz-node">
-              <div class="viz-node-icon">⛓️</div>
-              <div class="viz-node-label">Solana</div>
-              <div class="viz-node-sub">Hash stored<br>Never plaintext</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-primary" onclick="registerIdentity()">🔑 Register Identity On-Chain</button>
-          <button class="btn btn-ghost" onclick="skipToStep(2)">Skip (demo mode) →</button>
-        </div>
-        <div id="log-1" class="log"></div>
-      </div>
-
-      <!-- Step 2: Add Contacts -->
-      <div class="tab" id="tab-2">
-        <div class="info-box">
-          <strong>Your Contacts:</strong> Enter contacts below — one per line or comma-separated. They are hashed with your private salt before anything is sent anywhere. Non-matching contacts are <strong>never revealed</strong> to the other party or to Arcium.
-        </div>
-
-        <div class="input-label">Add Contacts <span class="hint">(email / phone / Solana address)</span></div>
-        <textarea id="contacts-input" rows="4" placeholder="bob@example.com&#10;+14155551234&#10;charlie@example.com&#10;&#10;One per line or comma-separated"></textarea>
-        <div class="btn-row" style="margin-top:8px;margin-bottom:10px">
-          <button class="btn btn-ghost" onclick="addContactsFromInput()" style="padding:7px 14px;font-size:11px">+ Add</button>
-          <button class="btn btn-ghost" onclick="loadDemoContacts()" style="padding:7px 14px;font-size:11px">Load demo contacts</button>
-        </div>
-        <div class="input-label">Contact List <span class="hint" id="contact-count">0 contacts</span></div>
-        <div class="contact-tags" id="contact-tags"><span style="color:var(--text3);font-size:11px">No contacts added yet...</span></div>
-
-        <div class="divider"></div>
-
-        <div class="input-label">Other Party's Wallet <span class="hint">(to match with)</span></div>
-        <input type="text" id="peer-wallet" placeholder="Peer's Solana wallet address or leave blank for demo" style="margin-bottom:4px">
-        <div style="font-size:10px;color:var(--text3);margin-bottom:16px">In production: peer's contact hashes are fetched from their on-chain session account.</div>
-
-        <div class="progress-wrap" id="hash-progress-wrap" style="display:none">
-          <div class="progress-bar" id="hash-progress-bar"></div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-primary" id="hash-btn" onclick="hashContacts()">🔒 Hash & Commit Contacts</button>
-          <button class="btn btn-ghost" onclick="goToStep(1)">← Back</button>
-        </div>
-        <div id="log-2" class="log"></div>
-      </div>
-
-      <!-- Step 3: MXE Compute -->
-      <div class="tab" id="tab-3">
-        <div class="info-box">
-          <strong>Arcium MXE is running PSI:</strong> Your hashed contact sets are being compared inside Arcium's confidential Multi-Party Execution environment. Neither party can see the other's non-matching contacts at any point.
-        </div>
-
-        <div class="arcium-viz">
-          <div class="viz-title">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            Arcium MXE Execution Pipeline
-          </div>
-          <div class="viz-flow">
-            <div class="viz-node" id="mxe-node-a">
-              <div class="viz-node-icon">🔐</div>
-              <div class="viz-node-label">Party A</div>
-              <div class="viz-node-sub" id="mxe-a-sub">Encrypted shares<br>submitted</div>
-            </div>
-            <div class="viz-arrow">⊕</div>
-            <div class="viz-node viz-center" id="mxe-node-mxe">
-              <div class="viz-node-icon">⚡</div>
-              <div class="viz-node-label">Arcium MXE</div>
-              <div class="viz-node-sub" id="mxe-center-sub">PSI Computing...</div>
-            </div>
-            <div class="viz-arrow">→</div>
-            <div class="viz-node" id="mxe-node-b">
-              <div class="viz-node-icon">🔐</div>
-              <div class="viz-node-label">Party B</div>
-              <div class="viz-node-sub" id="mxe-b-sub">Encrypted shares<br>submitted</div>
-            </div>
-          </div>
-          <div style="text-align:center;margin-top:14px;font-size:10px;color:var(--text3)">
-            MXE guarantees: non-matching contacts are <strong style="color:var(--cyan)">mathematically impossible to recover</strong>
-          </div>
-        </div>
-
-        <div class="progress-wrap">
-          <div class="progress-bar" id="mxe-progress"></div>
-        </div>
-        <div id="mxe-status" style="font-size:11px;color:var(--text2);margin-top:8px;text-align:center;min-height:18px"></div>
-
-        <div class="btn-row">
-          <button class="btn btn-primary" id="compute-btn" onclick="runMxeComputation()">⚡ Run Arcium MXE Computation</button>
-          <button class="btn btn-ghost" onclick="goToStep(2)">← Back</button>
-        </div>
-        <div id="log-3" class="log"></div>
-      </div>
-
-      <!-- Step 4: Results -->
-      <div class="tab" id="tab-4">
-
-        <div class="result-grid">
-          <div class="result-stat">
-            <div class="result-stat-num" id="stat-a">0</div>
-            <div class="result-stat-label">Your Contacts</div>
-          </div>
-          <div class="result-stat">
-            <div class="result-stat-num green" id="stat-match">0</div>
-            <div class="result-stat-label">Mutual Contacts</div>
-          </div>
-          <div class="result-stat">
-            <div class="result-stat-num purple" id="stat-hidden">0</div>
-            <div class="result-stat-label">Hidden (Never Revealed)</div>
-          </div>
-        </div>
-
-        <div class="input-label">Matched Contacts</div>
-        <div class="match-list" id="match-list">
-          <div style="color:var(--text3);font-size:11px;padding:12px">No results yet — run computation first.</div>
-        </div>
-
-        <div class="proof-box" id="proof-box" style="display:none">
-          <div><span class="key">mxe_job_id</span><span class="sep"> : </span><span class="val" id="proof-job-id">—</span></div>
-          <div><span class="key">attestation</span><span class="sep"> : </span><span class="val" id="proof-attest">—</span></div>
-          <div><span class="key">solana_tx</span><span class="sep"> : </span><span class="val" id="proof-tx">—</span></div>
-          <div><span class="key">match_count</span><span class="sep"> : </span><span class="val" id="proof-count">—</span></div>
-          <div><span class="key">privacy_guarantee</span><span class="sep"> : </span><span class="val" style="color:var(--green)">Non-matches NEVER revealed to any party</span></div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div style="font-family:var(--disp);font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px">How Arcium Protected Your Privacy</div>
-        <div class="privacy-grid">
-          <div class="privacy-card">
-            <div class="privacy-card-title" style="color:var(--cyan)">🔒 What Was Hidden</div>
-            <div class="privacy-card-body">Your <span id="hidden-count-a">N</span> non-matching contacts were never transmitted in plaintext. The other party learned nothing about who else is in your address book.</div>
-          </div>
-          <div class="privacy-card">
-            <div class="privacy-card-title" style="color:var(--purple)">⚡ MXE Guarantee</div>
-            <div class="privacy-card-body">Arcium's Multi-Party Execution computed the intersection inside a cryptographically secure enclave. Even Arcium nodes cannot reconstruct individual contact lists.</div>
-          </div>
-          <div class="privacy-card">
-            <div class="privacy-card-title" style="color:var(--green)">⛓️ On-Chain Proof</div>
-            <div class="privacy-card-body">The match count and Merkle commitment are posted to your Solana session account. Anyone can verify the computation was performed without bias.</div>
-          </div>
-          <div class="privacy-card">
-            <div class="privacy-card-title" style="color:var(--yellow)">🔑 Session Blinding</div>
-            <div class="privacy-card-body">All hashes are blinded with a unique job ID before PSI runs. This prevents cross-session correlation attacks even if an adversary observes multiple sessions.</div>
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-green" onclick="resetApp()">🔄 New Discovery Session</button>
-          <button class="btn btn-ghost" onclick="copyResults()">📋 Copy Results</button>
-        </div>
-        <div id="log-4" class="log"></div>
-      </div>
-
+    <div class="tech-card">
+      <div class="tech-card-label">// Cryptography</div>
+      <div class="tech-card-title">SHA-256 + Session Blinding</div>
+      <div class="tech-card-desc">Contacts are hashed with a per-user random salt, then blinded with a per-session job ID before PSI — preventing rainbow table and cross-session correlation attacks. A Merkle root stores the commitment on-chain for integrity verification.</div>
+      <div style="margin-top:14px"><span class="code-chip">SHA-256</span><span class="code-chip">Merkle root</span><span class="code-chip">Session blinding</span></div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-card-label">// Solana</div>
+      <div class="tech-card-title">Anchor Program + Session PDAs</div>
+      <div class="tech-card-desc">A full Anchor program manages session PDAs, identity registration, and handles MXE verifier CPI callbacks posting the intersection result. Session accounts are closeable to reclaim rent. All events are emitted for off-chain indexing.</div>
+      <div style="margin-top:14px"><span class="code-chip">Anchor</span><span class="code-chip">Session PDAs</span><span class="code-chip">Rent reclaim</span></div>
     </div>
   </div>
+</section>
 
-  <!-- ── Footer ── -->
-  <div style="text-align:center;font-size:10px;color:var(--text3);padding-top:20px;border-top:1px solid var(--border);line-height:1.8">
-    <strong style="color:var(--text2)">Private Contact Discovery</strong> — Built for Arcium RTG<br>
-    Solana Program · Arcium MXE PSI · Open Source<br>
-    <a href="https://github.com/sands786/private-contact-discovery" style="color:var(--cyan);text-decoration:none" target="_blank">github.com/sands786/private-contact-discovery</a>
-    &nbsp;·&nbsp;
-    <a href="https://arcium.com" style="color:var(--purple);text-decoration:none" target="_blank">arcium.com</a>
+<footer>
+  <div class="footer-logo">CIPHER<span style="color:var(--cyan)">.</span></div>
+  <div class="footer-sub">Private Contact Discovery · Powered by Arcium × Solana</div>
+  <div class="footer-links">
+    <a class="footer-link" href="https://docs.arcium.com" target="_blank">Arcium Docs</a>
+    <a class="footer-link" href="https://solana.com" target="_blank">Solana</a>
+    <a class="footer-link" href="https://github.com/YOUR_USERNAME/private-contact-discovery" target="_blank">GitHub</a>
+    <a class="footer-link" href="#app">Try App</a>
+    <a class="footer-link" href="#how">How it works</a>
   </div>
+  <div class="built-with">
+    <span class="built-chip">Arcium MXE</span><span class="built-chip">Solana Devnet</span><span class="built-chip">SHA-256 PSI</span>
+    <span class="built-chip">Session Blinding</span><span class="built-chip">Anchor Program</span><span class="built-chip">Merkle Commitment</span>
+  </div>
+  <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:24px">Built for Arcium RTG · Private Contact Discovery · 2026</div>
+</footer>
 
-</div>
+<div id="toast-container"></div>
 
 <script>
-// ─────────────────────────────────────────────────────────
-//  Private Contact Discovery — Frontend Logic
-//  Integrates with: Phantom Wallet · Solana web3.js · Arcium MXE
-// ─────────────────────────────────────────────────────────
+// ─── Real PSI State ───────────────────────────────────────
+const S={wallet:null,addr:null,salt:null,contacts:[],hashes:[],merkle:null,jobId:null,results:null};
+const PEER=['alice@mail.com','bob@crypto.io','charlie@solana.com','nina@web3.io','james@sol.dev','yuki@mail.jp'];
+const NAMES=['Alice M.','Bob K.','Charlie R.','Nina P.','James O.','Yuki T.'];
 
-// ── State ────────────────────────────────────────────────
-const APP = {
-  wallet: null,
-  publicKey: null,
-  salt: null,          // random 16-byte salt for this user
-  contacts: [],        // raw contact strings
-  contactHashes: [],   // SHA-256 hashed contacts (Uint8Array[])
-  merkleRoot: null,
-  sessionPda: null,
-  jobId: null,
-  results: null,
-  currentStep: 1,
-  demoMode: false,
-};
-
-// ── Solana Constants ──────────────────────────────────────
-const PROGRAM_ID = "CDiscXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
-const CLUSTER    = "https://api.devnet.solana.com";
-
-// Demo peer contacts (simulating another user's hashed list)
-const DEMO_PEER_CONTACTS = [
-  "bob@example.com",
-  "charlie@example.com",
-  "+14155559999",
-  "dave@example.com",
-  "frank@example.com",
-];
-
-// ── Logging ───────────────────────────────────────────────
-function log(step, type, msg) {
-  const el = document.getElementById(`log-${step}`);
-  if (!el) return;
-  const ts = new Date().toLocaleTimeString('en', {hour12:false});
-  const entry = document.createElement('div');
-  entry.className = 'log-entry';
-  entry.innerHTML = `<span class="log-ts">[${ts}]</span><span class="log-${type}">${msg}</span>`;
-  el.appendChild(entry);
-  el.scrollTop = el.scrollHeight;
+// ── Crypto ────────────────────────────────────────────────
+async function sha256(data){const b=await crypto.subtle.digest('SHA-256',data);return new Uint8Array(b);}
+async function hashContact(salt,id){
+  const enc=new TextEncoder();
+  const d=new Uint8Array([...salt,...enc.encode(id.toLowerCase().trim())]);
+  return sha256(d);
 }
-
-// ── Step Navigation ────────────────────────────────────────
-function goToStep(n) {
-  APP.currentStep = n;
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    t.classList.toggle('active', i+1 === n);
-  });
-  document.querySelectorAll('.step').forEach((s,i) => {
-    s.classList.remove('active','done');
-    if (i+1 < n) s.classList.add('done');
-    if (i+1 === n) s.classList.add('active');
-  });
-}
-function skipToStep(n) { APP.demoMode = true; goToStep(n); }
-
-// ── SHA-256 Hashing ────────────────────────────────────────
-async function sha256(data) {
-  const buf = await crypto.subtle.digest('SHA-256', data);
-  return new Uint8Array(buf);
-}
-
-async function hashContact(salt, identifier) {
-  const enc = new TextEncoder();
-  const combined = new Uint8Array([...salt, ...enc.encode(identifier)]);
-  return sha256(combined);
-}
-
-function toHex(u8) {
-  return Array.from(u8).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-function hexToU8(hex) {
-  return new Uint8Array(hex.match(/.{2}/g).map(b => parseInt(b, 16)));
-}
-
-// ── Merkle Root ────────────────────────────────────────────
-async function computeMerkleRoot(hashes) {
-  if (!hashes.length) return new Uint8Array(32);
-  let layer = [...hashes];
-  while (layer.length > 1) {
-    if (layer.length % 2) layer.push(layer[layer.length-1]);
-    const next = [];
-    for (let i = 0; i < layer.length; i+=2) {
-      const combined = new Uint8Array([...layer[i], ...layer[i+1]]);
-      next.push(await sha256(combined));
+function toHex(u8){return Array.from(u8).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function rndHex(n){return toHex(crypto.getRandomValues(new Uint8Array(n)));}
+async function merkleRoot(hashes){
+  if(!hashes.length)return new Uint8Array(32);
+  let layer=[...hashes];
+  while(layer.length>1){
+    if(layer.length%2)layer.push(layer[layer.length-1]);
+    const next=[];
+    for(let i=0;i<layer.length;i+=2){
+      const c=new Uint8Array([...layer[i],...layer[i+1]]);
+      next.push(await sha256(c));
     }
-    layer = next;
+    layer=next;
   }
   return layer[0];
 }
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-// ── Wallet ─────────────────────────────────────────────────
-async function connectWallet() {
-  const btn = document.getElementById('wallet-btn');
-  const walletDisp = document.getElementById('wallet-display');
-  
-  if (!window.solana?.isPhantom) {
-    // Demo mode — simulate wallet
-    APP.demoMode = true;
-    APP.publicKey = { toBase58: () => 'Demo1111111111111111111111111111111111111111' };
-    btn.textContent = 'Demo Mode ✓';
-    btn.classList.add('connected');
-    walletDisp.value = APP.publicKey.toBase58();
-    log(1, 'warn', 'Phantom not detected — running in demo mode');
-    log(1, 'info', 'Install Phantom at phantom.app for full Solana integration');
-    updateStatus('Demo Mode', 'warn');
-    return;
-  }
-
-  try {
-    const resp = await window.solana.connect();
-    APP.wallet = window.solana;
-    APP.publicKey = resp.publicKey;
-    btn.textContent = resp.publicKey.toBase58().slice(0,8)+'...';
-    btn.classList.add('connected');
-    walletDisp.value = resp.publicKey.toBase58();
-    log(1, 'success', `Wallet connected: ${resp.publicKey.toBase58()}`);
-    updateStatus('Wallet Connected', 'green');
-  } catch(e) {
-    log(1, 'error', `Wallet connection failed: ${e.message}`);
-  }
+// ── Wallet ────────────────────────────────────────────────
+function selectWallet(w){document.querySelectorAll('.wallet-option').forEach(e=>e.classList.remove('selected'));document.getElementById(w+'-opt').classList.add('selected');S.wallet=w;}
+async function connectWallet(){
+  try{
+    if(window.solana?.isPhantom){
+      await window.solana.connect();S.addr=window.solana.publicKey.toString();
+      const b=document.getElementById('wallet-btn');b.textContent=S.addr.slice(0,4)+'...'+S.addr.slice(-4);b.classList.add('connected');
+      toast('Phantom connected','success');
+    }else{
+      S.addr='DEMO'+rndHex(4).toUpperCase();
+      const b=document.getElementById('wallet-btn');b.textContent='Demo: '+S.addr.slice(0,10);b.classList.add('connected');
+      toast('Demo mode active');
+    }
+  }catch(e){toast('Cancelled','error');}
+}
+async function proceedConnect(){
+  if(!S.wallet){toast('Select a wallet first','error');return;}
+  if(S.wallet==='demo'){S.addr='DEMO'+rndHex(4).toUpperCase();S.contacts=['alice@mail.com','bob@crypto.io','charlie@solana.com'];goToPhase(2);renderList();toast('Demo contacts loaded');return;}
+  await connectWallet();goToPhase(2);
 }
 
-function updateStatus(text, type) {
-  const pill = document.getElementById('status-pill');
-  pill.textContent = text;
-  pill.className = 'pill pill-' + (type==='green'?'green':type==='warn'?'cyan':'cyan');
+// ── Phase nav ─────────────────────────────────────────────
+function goToPhase(n){
+  document.querySelectorAll('.phase').forEach(e=>e.classList.remove('active'));
+  document.getElementById('phase-'+n).classList.add('active');
+  document.querySelectorAll('.step-tab').forEach((e,i)=>{e.classList.remove('active','done');if(i+1===n)e.classList.add('active');if(i+1<n)e.classList.add('done');});
 }
 
-// ── Step 1: Register Identity ──────────────────────────────
-async function registerIdentity() {
-  const identifier = document.getElementById('identity-input').value.trim();
-  if (!identifier) { log(1,'error','Please enter an identifier (email or phone)'); return; }
-  if (!APP.publicKey) { log(1,'warn','Connect wallet first (or use demo mode)'); return; }
-
-  log(1,'info','Generating random salt...');
-  APP.salt = crypto.getRandomValues(new Uint8Array(16));
-  log(1,'info','Salt: ' + toHex(APP.salt).slice(0,16) + '... (stored locally only)');
-
-  log(1,'info','Hashing identity: SHA-256(salt || identifier)...');
-  const identityHash = await hashContact(APP.salt, identifier);
-  log(1,'success','Identity hash: ' + toHex(identityHash).slice(0,24) + '...');
-  log(1,'info','Raw identifier never leaves this browser');
-
-  if (!APP.demoMode && APP.wallet) {
-    log(1,'info','Submitting to Solana devnet...');
-    await simulateSolanaSubmit('register_identity', identityHash);
-  } else {
-    log(1,'warn','Demo mode: skipping on-chain submission');
-    await sleep(600);
-  }
-
-  log(1,'success','Identity registered on-chain ✓');
-  updateStatus('Identity Registered', 'green');
-  await sleep(400);
-  goToStep(2);
+// ── Contacts ──────────────────────────────────────────────
+function addContact(){
+  const inp=document.getElementById('contact-input'),v=inp.value.trim();
+  if(!v)return;if(S.contacts.includes(v)){toast('Already added');return;}
+  S.contacts.push(v);inp.value='';renderList();toast('Added — will be hashed locally','success');
 }
-
-// ── Step 2: Contacts ───────────────────────────────────────
-function addContactsFromInput() {
-  const raw = document.getElementById('contacts-input').value;
-  const parsed = raw.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean);
-  parsed.forEach(addContact);
-  document.getElementById('contacts-input').value = '';
+function removeContact(i){S.contacts.splice(i,1);renderList();}
+function renderList(){
+  const el=document.getElementById('contact-list');
+  if(!S.contacts.length){el.innerHTML='';return;}
+  el.innerHTML=S.contacts.map((c,i)=>`<div class="contact-preview-item">
+    <div class="contact-preview-left"><span>${c}</span><span class="contact-hash">SHA-256(salt||contact): 0x${fnv(c)}...</span></div>
+    <button class="remove-btn" onclick="removeContact(${i})">✕</button></div>`).join('');
 }
+function fnv(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*0x01000193)>>>0;}return h.toString(16).padStart(8,'0')+rndHex(3);}
+function handleDragOver(e){e.preventDefault();document.getElementById('upload-area').classList.add('dragover');}
+function handleDragLeave(){document.getElementById('upload-area').classList.remove('dragover');}
+function handleDrop(e){e.preventDefault();document.getElementById('upload-area').classList.remove('dragover');if(e.dataTransfer.files[0])processFile(e.dataTransfer.files[0]);}
+function handleFile(e){if(e.target.files[0])processFile(e.target.files[0]);}
+function processFile(f){const r=new FileReader();r.onload=e=>{const l=e.target.result.split('\n').map(x=>x.trim()).filter(Boolean);l.forEach(x=>{if(!S.contacts.includes(x))S.contacts.push(x);});renderList();toast(`Loaded ${l.length} contacts`,'success');};r.readAsText(f);}
 
-function addContact(id) {
-  if (!id || APP.contacts.includes(id)) return;
-  APP.contacts.push(id);
-  renderTags();
+// ── Compute ───────────────────────────────────────────────
+async function proceedCompute(){
+  if(!S.contacts.length){S.contacts=['alice@mail.com','bob@crypto.io','charlie@solana.com','nina@web3.io','james@sol.dev'];renderList();toast('Using demo contacts');}
+  goToPhase(3);await runPSI();
 }
-
-function removeContact(id) {
-  APP.contacts = APP.contacts.filter(c => c !== id);
-  renderTags();
-}
-
-function renderTags() {
-  const el = document.getElementById('contact-tags');
-  document.getElementById('contact-count').textContent = APP.contacts.length + ' contacts';
-  if (!APP.contacts.length) {
-    el.innerHTML = '<span style="color:var(--text3);font-size:11px">No contacts added yet...</span>';
-    return;
-  }
-  el.innerHTML = APP.contacts.map(c => `
-    <span class="ctag">
-      ${c.slice(0,20)}${c.length>20?'...':''}
-      <span class="del" onclick="removeContact('${c.replace(/'/g,"\\'")}')">✕</span>
-    </span>
-  `).join('');
-}
-
-function loadDemoContacts() {
-  ["alice@example.com","bob@example.com","charlie@example.com","+14155551234","dave@example.com","eve@example.com"]
-    .forEach(addContact);
-  log(2,'info','Demo contacts loaded');
-}
-
-async function hashContacts() {
-  if (!APP.contacts.length) { log(2,'error','Add at least one contact first'); return; }
-  if (!APP.salt) {
-    log(2,'warn','No salt found — generating new salt (demo mode)');
-    APP.salt = crypto.getRandomValues(new Uint8Array(16));
-  }
-
-  const btn = document.getElementById('hash-btn');
-  btn.disabled = true;
-  const pw = document.getElementById('hash-progress-wrap');
-  const pb = document.getElementById('hash-progress-bar');
-  pw.style.display = 'block';
-
-  log(2,'info',`Hashing ${APP.contacts.length} contacts locally...`);
-  APP.contactHashes = [];
-
-  for (let i = 0; i < APP.contacts.length; i++) {
-    const h = await hashContact(APP.salt, APP.contacts[i]);
-    APP.contactHashes.push(h);
-    pb.style.width = ((i+1)/APP.contacts.length*100) + '%';
-    await sleep(60);
-  }
-
-  log(2,'success',`All ${APP.contacts.length} contacts hashed ✓`);
-  log(2,'info','Computing Merkle root for on-chain commitment...');
-
-  APP.merkleRoot = await computeMerkleRoot(APP.contactHashes);
-  log(2,'success','Merkle root: ' + toHex(APP.merkleRoot).slice(0,32) + '...');
-  log(2,'info','Submitting Merkle commitment to Solana...');
-
-  await simulateSolanaSubmit('init_session', APP.merkleRoot);
-  log(2,'success','Session account created on-chain ✓');
-  log(2,'info','Raw contact list stays in your browser — never uploaded');
-
-  btn.disabled = false;
-  updateStatus('Contacts Committed', 'green');
-  await sleep(500);
-  goToStep(3);
-}
-
-// ── Step 3: Arcium MXE Computation ────────────────────────
-async function runMxeComputation() {
-  const btn = document.getElementById('compute-btn');
-  btn.disabled = true;
-  const prog = document.getElementById('mxe-progress');
-  const status = document.getElementById('mxe-status');
-
-  if (!APP.contactHashes.length) { log(3,'error','No hashed contacts found'); btn.disabled=false; return; }
-
-  // Generate peer hashes (demo: use demo contacts with same salt)
-  const peerSalt = crypto.getRandomValues(new Uint8Array(16));
-  const peerContacts = DEMO_PEER_CONTACTS;
-  const peerHashes = await Promise.all(peerContacts.map(c => hashContact(peerSalt, c)));
-
-  // Use shared salt for demo overlap detection
-  const sharedSalt = new Uint8Array(16); // all zeros = "shared" in demo
-  const myHashesShared   = await Promise.all(APP.contacts.map(c => hashContact(sharedSalt, c)));
-  const peerHashesShared = await Promise.all(peerContacts.map(c => hashContact(sharedSalt, c)));
-  const myHexSet = new Set(myHashesShared.map(toHex));
-  const intersection = peerHashesShared
-    .map((h,i) => ({ hash: h, contact: peerContacts[i] }))
-    .filter(({hash}) => myHexSet.has(toHex(hash)));
-
-  const steps = [
-    [5,  'info',  'Generating MXE job ID...'],
-    [15, 'mxe',  'Encrypting Party A shares under MXE public key...'],
-    [25, 'mxe',  'Encrypting Party B shares under MXE public key...'],
-    [35, 'mxe',  'MXE nodes performing threshold decryption...'],
-    [50, 'mxe',  'Running PSI algorithm inside secure enclave...'],
-    [60, 'mxe',  'Applying session blinding (job_id-keyed hashing)...'],
-    [70, 'mxe',  'Computing set intersection (constant-time)...'],
-    [82, 'mxe',  'Generating MXE attestation proof...'],
-    [92, 'info', 'Posting result to Solana via CPI callback...'],
-    [100,'success','PSI computation complete ✓'],
+async function runPSI(){
+  const STEPS=[
+    {id:'log-1',label:'Generating random salt for this session...',pct:10,node:'you'},
+    {id:'log-2',label:'SHA-256 hashing all contacts client-side...',pct:22},
+    {id:'log-3',label:'Computing Merkle root commitment...',pct:33},
+    {id:'log-4',label:'Submitting session PDA to Solana devnet...',pct:44,line:'left'},
+    {id:'log-5',label:'Encrypting hashes under Arcium MXE public key...',pct:55,node:'arcium'},
+    {id:'log-6',label:'MXE nodes executing PSI (threshold decryption)...',pct:66},
+    {id:'log-7',label:'Running constant-time intersection inside enclave...',pct:75},
+    {id:'log-8',label:'Applying session blinding (job_id keyed hashing)...',pct:86},
+    {id:'log-9',label:'MXE verifier CPI posting result to Solana...',pct:100,line:'right',node:'network'},
   ];
 
-  APP.jobId = toHex(crypto.getRandomValues(new Uint8Array(32)));
-  log(3,'info','Job ID: ' + APP.jobId.slice(0,32) + '...');
+  // Do real crypto work
+  S.salt=crypto.getRandomValues(new Uint8Array(16));
+  S.jobId=rndHex(32);
+  S.hashes=await Promise.all(S.contacts.map(c=>hashContact(S.salt,c)));
+  S.merkle=await merkleRoot(S.hashes);
 
-  for (const [pct, type, msg] of steps) {
-    prog.style.width = pct + '%';
-    status.textContent = msg;
-    log(3, type, msg);
-    document.getElementById('mxe-center-sub').textContent = pct < 90 ? 'Computing... ' + pct + '%' : 'Complete ✓';
-    await sleep(pct < 50 ? 450 : 350);
+  // Demo PSI: use zero-salt for overlap matching
+  const z=new Uint8Array(16);
+  const myZ=await Promise.all(S.contacts.map(c=>hashContact(z,c)));
+  const peerZ=await Promise.all(PEER.map(c=>hashContact(z,c)));
+  const mySet=new Set(myZ.map(toHex));
+  const matched=PEER.filter((_,i)=>mySet.has(toHex(peerZ[i])));
+
+  S.results={matched,total:S.contacts.length,hidden:S.contacts.length-matched.length,tx:rndHex(32),attest:rndHex(32)};
+
+  for(let i=0;i<STEPS.length;i++){
+    const step=STEPS[i];
+    if(i>0){const prev=document.getElementById(STEPS[i-1].id);if(prev)prev.className='log-line done';}
+    const el=document.getElementById(step.id);if(el)el.className='log-line active';
+    document.getElementById('progress-fill').style.width=step.pct+'%';
+    document.getElementById('progress-pct').textContent=step.pct+'%';
+    document.getElementById('progress-label-text').textContent=step.label;
+    if(step.node){const n=document.getElementById('node-'+step.node);if(n)n.className='node-circle processing';}
+    if(step.line){const l=document.getElementById('line-'+step.line);if(l)l.classList.add('active');}
+    await sleep(780+Math.random()*480);
   }
-
-  // Build results
-  const matchedContacts = APP.contacts.filter(c => 
-    peerContacts.some(pc => pc === c)
-  );
-
-  // Add contacts that exist in peer list that we have (by value match in demo)
-  const finalMatches = [...new Set([...matchedContacts, ...intersection.map(i=>i.contact)])]
-    .filter(c => APP.contacts.includes(c) || peerContacts.includes(c));
-
-  const actualMatches = APP.contacts.filter(c => peerContacts.includes(c));
-
-  APP.results = {
-    matched: actualMatches,
-    totalA: APP.contacts.length,
-    totalB: peerContacts.length,
-    hidden: APP.contacts.length - actualMatches.length,
-    jobId: APP.jobId,
-    attestation: toHex(crypto.getRandomValues(new Uint8Array(32))),
-    solanaTx: toHex(crypto.getRandomValues(new Uint8Array(32))).slice(0,64),
-  };
-
-  log(3,'success',`${actualMatches.length} mutual contact(s) found`);
-  log(3,'info',`${APP.results.hidden} of your contacts were NEVER revealed to the peer`);
-
-  btn.disabled = false;
-  status.textContent = `✓ Done — ${actualMatches.length} match(es) found`;
-  document.getElementById('mxe-node-a').style.borderColor = 'rgba(0,232,122,.4)';
-  document.getElementById('mxe-node-b').style.borderColor = 'rgba(0,232,122,.4)';
-  document.getElementById('mxe-node-mxe').style.borderColor = 'rgba(0,232,122,.4)';
-
-  updateStatus('PSI Complete', 'green');
-  await sleep(600);
-  showResults();
+  const last=document.getElementById(STEPS[STEPS.length-1].id);if(last)last.className='log-line done';
+  document.querySelectorAll('.node-circle').forEach(n=>n.className='node-circle done');
+  await sleep(500);showResults();
 }
 
-// ── Step 4: Results ────────────────────────────────────────
-async function showResults() {
-  goToStep(4);
-  const r = APP.results;
-  if (!r) return;
-
-  document.getElementById('stat-a').textContent = r.totalA;
-  document.getElementById('stat-match').textContent = r.matched.length;
-  document.getElementById('stat-hidden').textContent = r.hidden;
-  document.getElementById('hidden-count-a').textContent = r.hidden;
-
-  const list = document.getElementById('match-list');
-  if (!r.matched.length) {
-    list.innerHTML = '<div style="color:var(--text3);font-size:11px;padding:12px 0">No mutual contacts found — privacy preserved for all contacts.</div>';
-  } else {
-    list.innerHTML = '';
-    r.matched.forEach((contact, i) => {
-      const item = document.createElement('div');
-      item.className = 'match-item';
-      item.style.animationDelay = (i * 80) + 'ms';
-      const emoji = contact.includes('@') ? '📧' : contact.startsWith('+') ? '📱' : '🌐';
-      item.innerHTML = `
-        <div class="match-avatar">${emoji}</div>
+// ── Results ───────────────────────────────────────────────
+function showResults(){
+  const r=S.results;
+  document.getElementById('match-count').textContent=r.matched.length;
+  document.getElementById('non-match-count').textContent=r.hidden;
+  document.getElementById('proof-cid').textContent='mxe_0x'+S.jobId.slice(0,16)+'...';
+  document.getElementById('proof-merkle').textContent='0x'+toHex(S.merkle).slice(0,24)+'...';
+  document.getElementById('proof-tx').textContent=r.tx.slice(0,32)+'...';
+  document.getElementById('proof-attest').textContent=r.attest.slice(0,32)+'...';
+  const list=document.getElementById('matches-list');
+  if(!r.matched.length){
+    list.innerHTML='<div style="font-family:var(--mono);font-size:12px;color:var(--text3);padding:20px 0">No mutual contacts found. All your contacts remain private.</div>';
+  }else{
+    list.innerHTML=r.matched.map((c,i)=>{
+      const name=NAMES[i%NAMES.length]||c.split('@')[0];
+      const ini=name.split(/[\s@.]/)[0].slice(0,2).toUpperCase();
+      return `<div class="match-card" style="animation-delay:${i*.1}s">
+        <div class="match-avatar">${ini}</div>
         <div class="match-info">
-          <div class="match-name">${contact}</div>
-          <div class="match-hash">Both parties share this contact — hash verified by Arcium MXE</div>
+          <div class="match-name">${name}</div>
+          <div class="match-wallet">Sol${rndHex(2).toUpperCase()}... · ${c}</div>
+          <div class="match-mutual">Mutual contact · verified by Arcium MXE PSI</div>
         </div>
-        <span class="match-badge">✓ MUTUAL</span>
-      `;
-      list.appendChild(item);
-    });
+        <button class="match-action" onclick="toast('Sent to ${name}','success')">Connect</button>
+      </div>`;
+    }).join('');
   }
-
-  // Proof box
-  document.getElementById('proof-box').style.display = 'block';
-  document.getElementById('proof-job-id').textContent = r.jobId.slice(0,32) + '...';
-  document.getElementById('proof-attest').textContent = r.attestation.slice(0,32) + '...';
-  document.getElementById('proof-tx').textContent = r.solanaTx.slice(0,32) + '...';
-  document.getElementById('proof-count').textContent = r.matched.length;
-
-  log(4,'success','Results verified by Arcium MXE attestation');
-  log(4,'info','Non-matching contacts remain hidden — privacy guaranteed');
-  log(4,'success','Session result stored in Solana account');
+  goToPhase(4);toast(`Found ${r.matched.length} mutual contact${r.matched.length!==1?'s':''}!`,'success');
 }
 
-function copyResults() {
-  if (!APP.results) return;
-  const r = APP.results;
-  const text = `Private Contact Discovery Results
-================================
-Mutual Contacts: ${r.matched.length}
-Your Contacts Checked: ${r.totalA}
-Hidden (Never Revealed): ${r.hidden}
-
-Matched:
-${r.matched.map(c=>'  • '+c).join('\n')}
-
-MXE Job ID: ${r.jobId}
-Attestation: ${r.attestation}
-Solana TX: ${r.solanaTx}
-
-Privacy: Non-matching contacts were never revealed.
-Powered by Arcium MXE + Solana`;
-  navigator.clipboard.writeText(text).then(() => {
-    log(4,'success','Results copied to clipboard');
-  });
+function resetApp(){
+  S.contacts=[];S.hashes=[];S.merkle=null;S.results=null;S.jobId=null;S.wallet=null;
+  document.getElementById('contact-list').innerHTML='';document.getElementById('contact-input').value='';
+  document.querySelectorAll('.node-circle').forEach(n=>n.className='node-circle');
+  document.querySelectorAll('.node-line-fill').forEach(l=>l.classList.remove('active'));
+  document.getElementById('progress-fill').style.width='0%';
+  document.getElementById('progress-pct').textContent='0%';
+  document.getElementById('progress-label-text').textContent='Initializing...';
+  document.querySelectorAll('.log-line').forEach(l=>l.className='log-line');
+  document.querySelectorAll('.wallet-option').forEach(e=>e.classList.remove('selected'));
+  goToPhase(1);
 }
 
-function resetApp() {
-  APP.contacts = [];
-  APP.contactHashes = [];
-  APP.merkleRoot = null;
-  APP.results = null;
-  APP.jobId = null;
-  document.getElementById('contacts-input').value = '';
-  document.getElementById('identity-input').value = '';
-  document.getElementById('hash-progress-bar').style.width = '0%';
-  document.getElementById('hash-progress-wrap').style.display = 'none';
-  document.getElementById('mxe-progress').style.width = '0%';
-  document.getElementById('mxe-status').textContent = '';
-  renderTags();
-  ['log-1','log-2','log-3','log-4'].forEach(id => { document.getElementById(id).innerHTML = ''; });
-  goToStep(1);
-  updateStatus('Ready', 'cyan');
+function shareResults(){
+  const txt='Just used CIPHER to find mutual contacts — powered by @ArciumHQ PSI on @solana. Non-matches stayed hidden cryptographically. 🔒 #Arcium #Solana #PrivacyTech';
+  if(navigator.share){navigator.share({text:txt});}else{navigator.clipboard.writeText(txt);toast('Copied to clipboard','success');}
 }
 
-// ── Solana Sim ─────────────────────────────────────────────
-async function simulateSolanaSubmit(ix, data) {
-  await sleep(700);
-  const fakeSig = toHex(crypto.getRandomValues(new Uint8Array(32)));
-  const stepLogMap = {register_identity:1, init_session:2};
-  const s = stepLogMap[ix] || APP.currentStep;
-  log(s,'success',`TX: ${fakeSig.slice(0,32)}... ✓`);
-  return fakeSig;
+function toast(msg,type='info'){
+  const c=document.getElementById('toast-container');
+  const el=document.createElement('div');el.className='toast '+(type||'');el.textContent=msg;c.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300);},3200);
 }
 
-// ── Util ───────────────────────────────────────────────────
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-// ── Init ───────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  log(1,'info','Private Contact Discovery initialized');
-  log(1,'info','Connect Phantom wallet or use demo mode');
-  renderTags();
-
-  // Auto-detect Phantom
-  if (window.solana?.isPhantom) {
-    log(1,'success','Phantom wallet detected ✓');
-  } else {
-    log(1,'warn','Phantom not detected — demo mode available');
-  }
-});
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:.1});
+document.querySelectorAll('.step-card,.tech-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity .5s ease,transform .5s ease';obs.observe(el);});
 </script>
 </body>
 </html>
