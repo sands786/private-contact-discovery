@@ -1,3 +1,5 @@
+![CIPHER Logo](app/cipher-logo.svg)
+
 # 🔒 Private Contact Discovery — Arcium RTG Submission
 
 > **Find friends without uploading your address book.**  
