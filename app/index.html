@@ -169,6 +169,27 @@ v<!DOCTYPE html>
       50% { opacity: 0.6; }
     }
 
+    .try-now-btn {
+      font-family: var(--display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 8px 16px;
+      background: rgba(0, 229, 204, 0.15);
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .try-now-btn:hover {
+      background: rgba(0, 229, 204, 0.25);
+      box-shadow: 0 4px 12px var(--cyan-glow);
+      transform: translateY(-1px);
+    }
+
     .wallet-controls {
       display: flex;
       gap: 8px;
@@ -1094,6 +1115,77 @@ v<!DOCTYPE html>
       letter-spacing: 0.05em;
     }
 
+    /* Manual Email Input */
+    .input-section {
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .input-section h4 {
+      font-family: var(--display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .email-input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    #manual-email {
+      flex: 1;
+      padding: 12px 16px;
+      background: rgba(0, 229, 204, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    #manual-email:focus {
+      outline: none;
+      border-color: var(--cyan);
+      background: rgba(0, 229, 204, 0.1);
+      box-shadow: 0 0 0 3px rgba(0, 229, 204, 0.1);
+    }
+
+    #manual-email::placeholder {
+      color: var(--text3);
+    }
+
+    .add-email-btn {
+      font-family: var(--display);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 12px 24px;
+      background: rgba(0, 229, 204, 0.1);
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .add-email-btn:hover {
+      background: rgba(0, 229, 204, 0.2);
+      box-shadow: 0 4px 12px var(--cyan-glow);
+    }
+
+    .email-hint {
+      font-size: 12px;
+      color: var(--text3);
+      margin-bottom: 16px;
+    }
+
     /* Footer */
     footer {
       background: rgba(3, 5, 8, 0.8);
@@ -1207,6 +1299,18 @@ v<!DOCTYPE html>
       background: rgba(0, 229, 204, 0.2);
       border: 1px solid var(--cyan);
       color: var(--cyan);
+    }
+
+    .toast.warning {
+      background: rgba(240, 192, 96, 0.2);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+    }
+
+    .toast.warning {
+      background: rgba(240, 192, 96, 0.2);
+      border: 1px solid var(--gold);
+      color: var(--gold);
     }
 
     /* Responsive */
@@ -1351,6 +1455,7 @@ v<!DOCTYPE html>
       <span class="badge">Encrypted</span>
       <span class="badge" id="status-badge">Ready</span>
     </div>
+    <button class="try-now-btn" onclick="goToPage('app')">Try Now</button>
     <div class="wallet-controls">
       <button id="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
       <button id="disconnect-btn" onclick="disconnectWallet()">Disconnect</button>
@@ -1474,7 +1579,10 @@ v<!DOCTYPE html>
                 <div class="file-name" id="file-name"></div>
                 <div class="file-size" id="file-size"></div>
               </div>
-              <button class="upload-again-btn" onclick="document.getElementById('file-input').click()">Upload Different File</button>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                <button class="upload-again-btn" onclick="document.getElementById('file-input').click()">Upload Different File</button>
+                <button class="btn-primary" onclick="goToPhase(2)" style="padding: 10px 20px; font-size: 12px;">Proceed</button>
+              </div>
             </div>
           </div>
 
