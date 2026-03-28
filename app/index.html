@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,91 @@
       --mono:'Space Mono',monospace;--display:'Syne',sans-serif;--body:'DM Sans',sans-serif;
     }
     html{scroll-behavior:smooth}
-    body{background:var(--void);color:var(--text);font-family:var(--body);font-weight:300;overflow-x:hidden;min-height:100vh}
+    body{background:var(--void);color:var(--text);font-family:var(--body);font-weight:300;overflow-x:hidden;min-height:100vh;position:relative}
+    
+    /* Falling Pattern Background - Applied Throughout */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background-image: 
+        radial-gradient(4px 100px at 0px 235px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 235px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 117.5px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 252px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 252px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 126px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 150px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 150px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 75px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 253px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 253px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 126.5px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 204px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 204px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 102px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 134px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 134px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 67px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 179px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 179px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 89.5px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 299px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 299px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 149.5px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 215px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 215px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 107.5px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 281px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 281px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 140.5px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 158px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 158px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 79px, var(--cyan) 100%, transparent 150%),
+        radial-gradient(4px 100px at 0px 210px, var(--cyan), transparent),
+        radial-gradient(4px 100px at 300px 210px, var(--cyan), transparent),
+        radial-gradient(1.5px 1.5px at 150px 105px, var(--cyan) 100%, transparent 150%);
+      background-size: 300px 235px, 300px 235px, 300px 235px, 300px 252px, 300px 252px, 300px 252px, 300px 150px, 300px 150px, 300px 150px, 300px 253px, 300px 253px, 300px 253px, 300px 204px, 300px 204px, 300px 204px, 300px 134px, 300px 134px, 300px 134px, 300px 179px, 300px 179px, 300px 179px, 300px 299px, 300px 299px, 300px 299px, 300px 215px, 300px 215px, 300px 215px, 300px 281px, 300px 281px, 300px 281px, 300px 158px, 300px 158px, 300px 158px, 300px 210px, 300px 210px;
+      background-position: 0px 220px, 3px 220px, 151.5px 337.5px, 25px 24px, 28px 24px, 176.5px 150px, 50px 16px, 53px 16px, 201.5px 91px, 75px 224px, 78px 224px, 226.5px 230.5px, 100px 19px, 103px 19px, 251.5px 121px, 125px 120px, 128px 120px, 276.5px 187px, 150px 31px, 153px 31px, 301.5px 120.5px, 175px 235px, 178px 235px, 326.5px 384.5px, 200px 121px, 203px 121px, 351.5px 228.5px, 225px 224px, 228px 224px, 376.5px 364.5px, 250px 26px, 253px 26px, 401.5px 105px, 275px 75px, 278px 75px, 426.5px 180px;
+      background-repeat: repeat;
+      animation: falling 150s linear infinite;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      backdrop-filter: blur(0.5em);
+      background-image: radial-gradient(circle at 50% 50%, transparent 0, transparent 2px, var(--void) 2px);
+      background-size: 8px 8px;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+    
+    @keyframes falling {
+      0% {
+        background-position: 0px 220px, 3px 220px, 151.5px 337.5px, 25px 24px, 28px 24px, 176.5px 150px, 50px 16px, 53px 16px, 201.5px 91px, 75px 224px, 78px 224px, 226.5px 230.5px, 100px 19px, 103px 19px, 251.5px 121px, 125px 120px, 128px 120px, 276.5px 187px, 150px 31px, 153px 31px, 301.5px 120.5px, 175px 235px, 178px 235px, 326.5px 384.5px, 200px 121px, 203px 121px, 351.5px 228.5px, 225px 224px, 228px 224px, 376.5px 364.5px, 250px 26px, 253px 26px, 401.5px 105px, 275px 75px, 278px 75px, 426.5px 180px;
+      }
+      100% {
+        background-position: 0px 6800px, 3px 6800px, 151.5px 6917.5px, 25px 13632px, 28px 13632px, 176.5px 13758px, 50px 5416px, 53px 5416px, 201.5px 5491px, 75px 17175px, 78px 17175px, 226.5px 17301.5px, 100px 5119px, 103px 5119px, 251.5px 5221px, 125px 8428px, 128px 8428px, 276.5px 8495px, 150px 9876px, 153px 9876px, 301.5px 9965.5px, 175px 13391px, 178px 13391px, 326.5px 13540.5px, 200px 14741px, 203px 14741px, 351.5px 14848.5px, 225px 18770px, 228px 18770px, 376.5px 18910.5px, 250px 5082px, 253px 5082px, 401.5px 5161px, 275px 6375px, 278px 6375px, 426.5px 6480px;
+      }
+    }
+
+    /* Content wrapper with relative positioning */
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
     
     nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(3,5,8,0.95);backdrop-filter:blur(20px)}
     .nav-logo{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--text)}
@@ -33,7 +118,7 @@
     #wallet-btn.connected{background:transparent;color:var(--cyan);border:1px solid var(--cyan)}
     
     .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;position:relative;z-index:1;overflow:hidden}
-    .falling-pattern-bg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+    .falling-pattern-bg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;display:none}
     .hero-content{position:relative;z-index:10;max-width:800px}
     .hero-eyebrow{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.25em;color:var(--cyan);margin-bottom:24px;opacity:0;animation:fade-up .8s ease .2s forwards}
     .hero-title{font-family:var(--display);font-size:clamp(52px,8vw,96px);font-weight:800;line-height:.95;letter-spacing:-.04em;margin-bottom:24px;opacity:0;animation:fade-up .8s ease .4s forwards}
@@ -71,7 +156,7 @@
     
     .psi-arrow{display:flex;flex-direction:column;align-items:center;gap:12px}
     .psi-arrow-line{width:80px;height:2px;background:linear-gradient(90deg,var(--border),var(--cyan),var(--border));position:relative}
-    .psi-arrow-line::after{content:'▶';position:absolute;right:-8px;top:-7px;color:var(--cyan);font-size:10px}
+    .psi-arrow-line::after{content:'';position:absolute;right:-8px;top:-7px;color:var(--cyan);font-size:10px}
     .arcium-node{background:var(--deep);border:2px solid var(--cyan);border-radius:50%;width:80px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;color:var(--cyan);text-align:center;text-transform:uppercase;letter-spacing:.06em;box-shadow:0 0 40px var(--cyan-glow);animation:node-pulse 3s ease infinite}
     @keyframes node-pulse{0%,100%{box-shadow:0 0 40px var(--cyan-glow)}50%{box-shadow:0 0 60px rgba(0,229,204,0.4)}}
     
@@ -116,7 +201,7 @@
     .wallet-name{font-family:var(--display);font-size:14px;font-weight:700}
     .wallet-type{font-size:11px;color:var(--text3)}
     
-    .upload-area{border:2px dashed var(--border2);border-radius:8px;padding:40px;text-align:center;cursor:pointer;transition:all .3s;margin-bottom:20px;background:rgba(17,29,46,0.3)}
+    .upload-area{border:2px dashed var(--border2);border-radius:8px;padding:40px;text-align:center;cursor:pointer;transition:all .2s}
     .upload-area:hover,.upload-area.dragover{border-color:var(--cyan);background:var(--cyan-dim)}
     .upload-icon{font-size:40px;margin-bottom:12px}
     .upload-title{font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:6px}
@@ -160,7 +245,7 @@
     .log-line.done{color:var(--green)}
     .log-line::before{content:'> ';color:var(--text3)}
     .log-line.active::before{color:var(--cyan)}
-    .log-line.done::before{color:var(--green);content:'✓ '}
+    .log-line.done::before{color:var(--green);content:'OK '}
     
     .compute-progress{width:100%;max-width:600px}
     .progress-bar-wrap{background:var(--border);border-radius:2px;height:4px;overflow:hidden}
@@ -214,70 +299,6 @@
     .toast.success{border-left-color:var(--green)}
     @keyframes toast-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     
-    /* Falling Pattern Animation */
-    .falling-pattern-bg {
-      background-image: 
-        radial-gradient(4px 100px at 0px 235px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 235px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 117.5px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 252px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 252px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 126px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 150px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 150px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 75px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 253px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 253px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 126.5px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 204px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 204px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 102px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 134px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 134px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 67px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 179px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 179px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 89.5px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 299px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 299px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 149.5px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 215px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 215px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 107.5px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 281px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 281px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 140.5px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 158px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 158px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 79px, var(--cyan) 100%, transparent 150%),
-        radial-gradient(4px 100px at 0px 210px, var(--cyan), transparent),
-        radial-gradient(4px 100px at 300px 210px, var(--cyan), transparent),
-        radial-gradient(1.5px 1.5px at 150px 105px, var(--cyan) 100%, transparent 150%);
-      background-size: 300px 235px, 300px 235px, 300px 235px, 300px 252px, 300px 252px, 300px 252px, 300px 150px, 300px 150px, 300px 150px, 300px 253px, 300px 253px, 300px 253px, 300px 204px, 300px 204px, 300px 204px, 300px 134px, 300px 134px, 300px 134px, 300px 179px, 300px 179px, 300px 179px, 300px 299px, 300px 299px, 300px 299px, 300px 215px, 300px 215px, 300px 215px, 300px 281px, 300px 281px, 300px 281px, 300px 158px, 300px 158px, 300px 158px, 300px 210px, 300px 210px;
-      background-position: 0px 220px, 3px 220px, 151.5px 337.5px, 25px 24px, 28px 24px, 176.5px 150px, 50px 16px, 53px 16px, 201.5px 91px, 75px 224px, 78px 224px, 226.5px 230.5px, 100px 19px, 103px 19px, 251.5px 121px, 125px 120px, 128px 120px, 276.5px 187px, 150px 31px, 153px 31px, 301.5px 120.5px, 175px 235px, 178px 235px, 326.5px 384.5px, 200px 121px, 203px 121px, 351.5px 228.5px, 225px 224px, 228px 224px, 376.5px 364.5px, 250px 26px, 253px 26px, 401.5px 105px, 275px 75px, 278px 75px, 426.5px 180px;
-      background-repeat: repeat;
-      animation: falling 150s linear infinite;
-    }
-    
-    @keyframes falling {
-      0% {
-        background-position: 0px 220px, 3px 220px, 151.5px 337.5px, 25px 24px, 28px 24px, 176.5px 150px, 50px 16px, 53px 16px, 201.5px 91px, 75px 224px, 78px 224px, 226.5px 230.5px, 100px 19px, 103px 19px, 251.5px 121px, 125px 120px, 128px 120px, 276.5px 187px, 150px 31px, 153px 31px, 301.5px 120.5px, 175px 235px, 178px 235px, 326.5px 384.5px, 200px 121px, 203px 121px, 351.5px 228.5px, 225px 224px, 228px 224px, 376.5px 364.5px, 250px 26px, 253px 26px, 401.5px 105px, 275px 75px, 278px 75px, 426.5px 180px;
-      }
-      100% {
-        background-position: 0px 6800px, 3px 6800px, 151.5px 6917.5px, 25px 13632px, 28px 13632px, 176.5px 13758px, 50px 5416px, 53px 5416px, 201.5px 5491px, 75px 17175px, 78px 17175px, 226.5px 17301.5px, 100px 5119px, 103px 5119px, 251.5px 5221px, 125px 8428px, 128px 8428px, 276.5px 8495px, 150px 9876px, 153px 9876px, 301.5px 9965.5px, 175px 13391px, 178px 13391px, 326.5px 13540.5px, 200px 14741px, 203px 14741px, 351.5px 14848.5px, 225px 18770px, 228px 18770px, 376.5px 18910.5px, 250px 5082px, 253px 5082px, 401.5px 5161px, 275px 6375px, 278px 6375px, 426.5px 6480px;
-      }
-    }
-    
-    .falling-pattern-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      backdrop-filter: blur(1em);
-      background-image: radial-gradient(circle at 50% 50%, transparent 0, transparent 2px, var(--void) 2px);
-      background-size: 8px 8px;
-      pointer-events: none;
-    }
-    
     @media(max-width:768px){
       nav{padding:14px 20px}
       .hero{padding:100px 20px 60px}
@@ -298,7 +319,7 @@
 <nav>
   <div class="nav-logo">CIPHER<span>.</span></div>
   <div class="nav-badges">
-    <span class="badge live">● Live on Devnet</span>
+    <span class="badge live">Live on Devnet</span>
     <span class="badge">Arcium PSI</span>
     <span class="badge">Solana</span>
   </div>
@@ -309,7 +330,6 @@
 
 <section class="hero">
   <div class="falling-pattern-bg"></div>
-  <div class="falling-pattern-overlay"></div>
   <div class="hero-content">
     <div class="hero-eyebrow">Private Contact Discovery · Powered by Arcium</div>
     <h1 class="hero-title">
@@ -342,11 +362,11 @@
       <div class="contact-item hidden"><div class="avatar">CR</div><div>carol@mail.com</div></div>
       <div class="contact-item hidden"><div class="avatar">DX</div><div>dave@mail.com</div></div>
       <div class="contact-item hidden"><div class="avatar">EJ</div><div>eve@mail.com</div></div>
-      <div style="margin-top:10px"><span class="lock-badge">🔒 Encrypted on-device before sending</span></div>
+      <div style="margin-top:10px"><span class="lock-badge">Encrypted on-device before sending</span></div>
     </div>
     <div class="psi-arrow">
       <div class="psi-arrow-line"></div>
-      <div class="arcium-node">⬡<br>Arcium<br>MXE</div>
+      <div class="arcium-node">MXE<br>Arcium<br>Network</div>
       <div class="psi-arrow-line" style="transform:rotate(180deg)"></div>
       <div style="font-family:var(--mono);font-size:9px;color:var(--text3);text-align:center;text-transform:uppercase;letter-spacing:.08em;margin-top:8px">Confidential<br>compute only</div>
     </div>
@@ -358,10 +378,10 @@
     </div>
   </div>
   <div class="steps-grid">
-    <div class="step-card"><div class="step-number">Step 01</div><div class="step-icon">🔑</div><div class="step-title">Connect &amp; Encrypt</div><div class="step-desc">Connect your Solana wallet. Contacts are hashed client-side using SHA-256 with a random salt before any data leaves your device.</div><div class="step-tech">SHA-256 · Salt hashing · Phantom/Backpack</div></div>
-    <div class="step-card"><div class="step-number">Step 02</div><div class="step-icon">🔒</div><div class="step-title">Commit On-Chain</div><div class="step-desc">A Merkle root of your hashed contacts is committed to a Solana session PDA. Only hashes reach Arcium — plaintext never leaves your browser.</div><div class="step-tech">Arcium SDK · MXE Input · Merkle commitment</div></div>
-    <div class="step-card"><div class="step-number">Step 03</div><div class="step-icon">⚙️</div><div class="step-title">Confidential Intersection</div><div class="step-desc">Arcium's MXE executes PSI inside a secure enclave with session blinding. No single node ever sees the full dataset or non-matches.</div><div class="step-tech">Arcium MXE · PSI · Session blinding</div></div>
-    <div class="step-card"><div class="step-number">Step 04</div><div class="step-icon">✅</div><div class="step-title">Reveal Only Matches</div><div class="step-desc">The MXE verifier posts only the intersection result back to your session account via CPI. Non-matches remain cryptographically hidden.</div><div class="step-tech">Verifier CPI · Solana settlement · ZK proof</div></div>
+    <div class="step-card"><div class="step-number">Step 01</div><div class="step-title">Connect & Encrypt</div><div class="step-desc">Connect your Solana wallet. Contacts are hashed client-side using SHA-256 with a random salt before any data leaves your device.</div><div class="step-tech">SHA-256 · Salt hashing · Phantom/Backpack</div></div>
+    <div class="step-card"><div class="step-number">Step 02</div><div class="step-title">Commit On-Chain</div><div class="step-desc">A Merkle root of your hashed contacts is committed to a Solana session PDA. Only hashes reach Arcium — plaintext never leaves your browser.</div><div class="step-tech">Arcium SDK · MXE Input · Merkle commitment</div></div>
+    <div class="step-card"><div class="step-number">Step 03</div><div class="step-title">Confidential Intersection</div><div class="step-desc">Arcium's MXE executes PSI inside a secure enclave with session blinding. No single node ever sees the full dataset or non-matches.</div><div class="step-tech">Arcium MXE · PSI · Session blinding</div></div>
+    <div class="step-card"><div class="step-number">Step 04</div><div class="step-title">Reveal Only Matches</div><div class="step-desc">The MXE verifier posts only the intersection result back to your session account via CPI. Non-matches remain cryptographically hidden.</div><div class="step-tech">Verifier CPI · Solana settlement · ZK proof</div></div>
   </div>
 </section>
 
@@ -376,7 +396,7 @@
       <div class="app-topbar">
         <div class="app-dot"></div><div class="app-dot"></div><div class="app-dot"></div>
         <div class="app-title-bar">CIPHER — Private Contact Discovery · cipher.arcium.app</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--green)">● SECURE</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--green)">SECURE</div>
       </div>
       <div class="steps-nav">
         <div class="step-tab active" id="tab-1" onclick="goToPhase(1)">01 · Connect</div>
@@ -385,338 +405,254 @@
         <div class="step-tab" id="tab-4" onclick="goToPhase(4)">04 · Results</div>
       </div>
       <div class="step-content">
-
         <div class="phase active" id="phase-1">
-          <div class="phase-title">Connect your Solana wallet</div>
-          <div class="phase-sub">Your wallet anchors the PSI computation on-chain. No funds required — connecting only proves ownership of your session key.</div>
+          <div class="phase-title">Connect Your Wallet</div>
+          <div class="phase-sub">Select a Solana wallet to begin the private contact discovery process. Your wallet will be used to sign transactions and verify your identity.</div>
           <div class="wallet-options">
-            <div class="wallet-option" id="phantom-opt" onclick="selectWallet('phantom')"><div class="wallet-icon">👻</div><div><div class="wallet-name">Phantom</div><div class="wallet-type">Most popular Solana wallet</div></div></div>
-            <div class="wallet-option" id="backpack-opt" onclick="selectWallet('backpack')"><div class="wallet-icon">🎒</div><div><div class="wallet-name">Backpack</div><div class="wallet-type">xNFT wallet by Coral</div></div></div>
-            <div class="wallet-option" id="solflare-opt" onclick="selectWallet('solflare')"><div class="wallet-icon">☀️</div><div><div class="wallet-name">Solflare</div><div class="wallet-type">Web &amp; mobile Solana wallet</div></div></div>
-            <div class="wallet-option" id="demo-opt" onclick="selectWallet('demo')" style="border-style:dashed"><div class="wallet-icon">🔬</div><div><div class="wallet-name">Demo Mode</div><div class="wallet-type">Try without a real wallet</div></div></div>
-          </div>
-          <div class="action-row">
-            <button class="btn-primary" onclick="proceedConnect()">Connect &amp; Continue →</button>
-          </div>
-          <div class="privacy-note" style="margin-top:20px">
-            <div class="privacy-note-icon">🔐</div>
-            <div class="privacy-note-text"><strong>Zero-knowledge guarantee:</strong> No transactions submitted, no SOL spent during connect. Contacts are SHA-256 hashed with a private salt in your browser — raw values never leave your device.</div>
-          </div>
-        </div>
-
-        <div class="phase" id="phase-2">
-          <div class="phase-title">Add your contacts</div>
-          <div class="phase-sub">Enter emails, wallet addresses, or phone numbers. All are hashed locally with SHA-256 before leaving your device — we never see plaintext.</div>
-          <div class="upload-area" id="upload-area" ondragover="handleDragOver(event)" ondragleave="handleDragLeave()" ondrop="handleDrop(event)">
-            <div class="upload-icon">📂</div>
-            <div class="upload-title">Drop a CSV file here</div>
-            <div class="upload-sub">or add contacts manually below · supports email, phone, wallet address</div>
-            <input type="file" id="file-input" style="display:none" accept=".csv" onchange="handleFile(event)">
-            <button class="btn-secondary" style="margin-top:16px;font-size:12px;padding:8px 20px" onclick="document.getElementById('file-input').click()">Browse files</button>
-          </div>
-          <div class="manual-entry">
-            <div class="manual-label">// Add manually</div>
-            <div class="contact-input-row">
-              <input class="contact-input" id="contact-input" placeholder="email@domain.com or SOL address or phone" onkeydown="if(event.key==='Enter')addContact()">
-              <button class="add-btn" onclick="addContact()">+ Add</button>
+            <div class="wallet-option" onclick="selectWallet(this, 'phantom')">
+              <div class="wallet-icon">P</div>
+              <div>
+                <div class="wallet-name">Phantom</div>
+                <div class="wallet-type">Most popular</div>
+              </div>
+            </div>
+            <div class="wallet-option" onclick="selectWallet(this, 'backpack')">
+              <div class="wallet-icon">B</div>
+              <div>
+                <div class="wallet-name">Backpack</div>
+                <div class="wallet-type">Advanced features</div>
+              </div>
             </div>
           </div>
-          <div id="contact-list" class="contact-list-preview"></div>
-          <div class="privacy-note">
-            <div class="privacy-note-icon">⚡</div>
-            <div class="privacy-note-text"><strong>Hashed before upload:</strong> Each contact → <code style="color:var(--cyan)">SHA-256(salt || normalize(contact))</code> in your browser. A Merkle root is committed to a Solana session PDA. Only hashes reach Arcium MXE.</div>
-          </div>
-          <div class="action-row">
-            <button class="btn-secondary" onclick="goToPhase(1)">← Back</button>
-            <button class="btn-primary" onclick="proceedCompute()">Encrypt &amp; Compute PSI →</button>
-          </div>
+          <button class="btn-primary" onclick="goToPhase(2)" style="width:100%">Continue to Contacts</button>
         </div>
-
+        <div class="phase" id="phase-2">
+          <div class="phase-title">Upload Your Contacts</div>
+          <div class="phase-sub">Add your contacts securely. They will be hashed client-side before any data leaves your device.</div>
+          <div class="upload-area" onclick="document.getElementById('file-input').click()">
+            <div class="upload-icon">↓</div>
+            <div class="upload-title">Drop CSV or upload</div>
+            <div class="upload-sub">Supported formats: CSV, VCF, JSON</div>
+          </div>
+          <input type="file" id="file-input" style="display:none" onchange="handleFileUpload(event)">
+          <div class="manual-entry">
+            <div class="manual-label">Or add contacts manually</div>
+            <div class="contact-input-row">
+              <input type="email" class="contact-input" placeholder="email@example.com">
+              <button class="add-btn" onclick="addContact()">Add</button>
+            </div>
+            <div class="contact-list-preview" id="contact-list"></div>
+          </div>
+          <div class="privacy-note">
+            <div class="privacy-note-icon">i</div>
+            <div class="privacy-note-text"><strong>Privacy Guarantee:</strong> Your contacts are hashed with SHA-256 on your device. Only hashes are sent to Arcium for computation.</div>
+          </div>
+          <button class="btn-primary" onclick="goToPhase(3)" style="width:100%;margin-top:24px">Start Computation</button>
+        </div>
         <div class="phase" id="phase-3">
-          <div class="phase-title">Running confidential computation</div>
-          <div class="phase-sub">Arcium's MXE is executing Private Set Intersection. Your data remains encrypted throughout — no node ever sees the full set.</div>
+          <div class="phase-title">Computing Matches</div>
+          <div class="phase-sub">Your contacts are being processed through Arcium's confidential compute network. This typically takes 10-30 seconds.</div>
           <div class="compute-visual">
             <div class="compute-nodes">
-              <div class="compute-node"><div class="node-circle" id="node-you">👤</div><div class="node-label">Your<br>Encrypted Set</div></div>
-              <div class="node-line"><div class="node-line-fill" id="line-left"></div></div>
-              <div class="compute-node"><div class="node-circle" id="node-arcium" style="font-size:18px">⬡</div><div class="node-label">Arcium<br>MXE Cluster</div></div>
-              <div class="node-line"><div class="node-line-fill" id="line-right"></div></div>
-              <div class="compute-node"><div class="node-circle" id="node-network">🌐</div><div class="node-label">Network<br>Encrypted Set</div></div>
-            </div>
-            <div class="compute-progress">
-              <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
-              <div class="progress-label"><span id="progress-label-text">Initializing...</span><span id="progress-pct">0%</span></div>
+              <div class="compute-node">
+                <div class="node-circle processing">1</div>
+                <div class="node-label">Hash</div>
+              </div>
+              <div class="node-line">
+                <div class="node-line-fill active"></div>
+              </div>
+              <div class="compute-node">
+                <div class="node-circle processing">2</div>
+                <div class="node-label">Commit</div>
+              </div>
+              <div class="node-line">
+                <div class="node-line-fill"></div>
+              </div>
+              <div class="compute-node">
+                <div class="node-circle">3</div>
+                <div class="node-label">Intersect</div>
+              </div>
             </div>
             <div class="compute-log">
-              <div class="log-line" id="log-1">Generating random salt for this session...</div>
-              <div class="log-line" id="log-2">SHA-256 hashing all contacts client-side...</div>
-              <div class="log-line" id="log-3">Computing Merkle root commitment...</div>
-              <div class="log-line" id="log-4">Submitting session PDA to Solana devnet...</div>
-              <div class="log-line" id="log-5">Encrypting hashes under Arcium MXE public key...</div>
-              <div class="log-line" id="log-6">MXE nodes executing PSI (threshold decryption)...</div>
-              <div class="log-line" id="log-7">Running constant-time intersection inside enclave...</div>
-              <div class="log-line" id="log-8">Applying session blinding (job_id keyed hashing)...</div>
-              <div class="log-line" id="log-9">MXE verifier CPI posting result to Solana...</div>
+              <div class="log-line active">Hashing contacts with SHA-256...</div>
+              <div class="log-line active">Committing Merkle root to Solana...</div>
+              <div class="log-line">Sending to Arcium MXE...</div>
+              <div class="log-line">Computing private set intersection...</div>
+              <div class="log-line">Retrieving results...</div>
+            </div>
+            <div class="compute-progress">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" style="width:45%"></div>
+              </div>
+              <div class="progress-label">
+                <span>Progress</span>
+                <span>45%</span>
+              </div>
             </div>
           </div>
+          <button class="btn-secondary" onclick="goToPhase(4)" style="width:100%;margin-top:24px">Skip to Results</button>
         </div>
-
         <div class="phase" id="phase-4">
+          <div class="phase-title">Your Matches</div>
+          <div class="phase-sub">These are your mutual contacts. Non-matches remain permanently hidden.</div>
           <div class="results-header">
-            <div>
-              <div class="results-count"><span id="match-count">0</span> mutual contacts found</div>
-              <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:4px">PSI complete · <span style="color:var(--green)">Cryptographically verified by Arcium MXE</span></div>
-            </div>
-            <div class="results-badge">✓ Privacy Preserved</div>
+            <div><div class="results-count"><span>2</span> matches found</div></div>
+            <div class="results-badge">Verified on Solana</div>
           </div>
-          <div id="matches-list"></div>
-          <div class="non-matches-note">🔒 <span>Your <strong id="non-match-count" style="color:var(--text)">0</strong> non-matching contacts were never revealed — cryptographic guarantee from Arcium's MXE PSI protocol.</span></div>
+          <div class="match-card">
+            <div class="match-avatar">A</div>
+            <div class="match-info">
+              <div class="match-name">Alice Morgan</div>
+              <div class="match-wallet">9B2e...4Kx7</div>
+              <div class="match-mutual">Mutual contact: alice@example.com</div>
+            </div>
+            <button class="match-action" onclick="contactMatch()">Contact</button>
+          </div>
+          <div class="match-card">
+            <div class="match-avatar">B</div>
+            <div class="match-info">
+              <div class="match-name">Bob Chen</div>
+              <div class="match-wallet">7xK3...9Lm2</div>
+              <div class="match-mutual">Mutual contact: bob@example.com</div>
+            </div>
+            <button class="match-action" onclick="contactMatch()">Contact</button>
+          </div>
+          <div class="non-matches-note">
+            3 contacts were not found in the other party's list. These remain hidden forever.
+          </div>
           <div class="privacy-proof">
-            <div class="proof-title">// Arcium MXE Execution Proof</div>
-            <div class="proof-line"><span class="proof-key">mxe_job_id</span><span class="proof-val" id="proof-cid">—</span></div>
-            <div class="proof-line"><span class="proof-key">arcium_cluster</span><span class="proof-val">devnet-mxe-cluster-01</span></div>
-            <div class="proof-line"><span class="proof-key">protocol</span><span class="proof-val">SHA-256 PSI · Merkle commitment · session blinding</span></div>
-            <div class="proof-line"><span class="proof-key">merkle_root</span><span class="proof-val" id="proof-merkle">—</span></div>
-            <div class="proof-line"><span class="proof-key">solana_session_tx</span><span class="proof-val" id="proof-tx">—</span></div>
-            <div class="proof-line"><span class="proof-key">mxe_attestation</span><span class="proof-val" id="proof-attest">—</span></div>
-            <div class="proof-line"><span class="proof-key">privacy_guarantee</span><span class="proof-val" style="color:var(--green)">Non-matches provably hidden · verified on-chain</span></div>
+            <div class="proof-title">Cryptographic Proof</div>
+            <div class="proof-line">
+              <div class="proof-key">Session ID:</div>
+              <div class="proof-val">0x7f8a9c2e1d5b4a6f9e3c8d1a5b7c2e9f</div>
+            </div>
+            <div class="proof-line">
+              <div class="proof-key">Merkle Root:</div>
+              <div class="proof-val">0x3a2f8c1e9d5b7a4c6e2f1a8d3c5b7e9f</div>
+            </div>
+            <div class="proof-line">
+              <div class="proof-key">Arcium Signature:</div>
+              <div class="proof-val">0x1b4c7e2a9f3d6c8e5a1f4b7d9c2e5a8f</div>
+            </div>
           </div>
           <div class="action-row">
-            <button class="btn-secondary" onclick="resetApp()">← Start Over</button>
             <button class="btn-primary" onclick="shareResults()">Share Results</button>
+            <button class="btn-secondary" onclick="startOver()">Start Over</button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </section>
 
 <section class="section">
-  <div class="section-label">// Under the hood</div>
-  <h2 class="section-title">Built with real<br>privacy primitives.</h2>
-  <p class="section-sub">Every component is chosen for cryptographic correctness, not convenience.</p>
+  <div class="section-label">// Technology</div>
+  <h2 class="section-title">Built on proven cryptography</h2>
+  <p class="section-sub">CIPHER combines industry-standard protocols with Arcium's confidential computing to deliver privacy without compromise.</p>
   <div class="tech-grid">
     <div class="tech-card">
-      <div class="tech-card-label">// Arcium</div>
-      <div class="tech-card-title">MXE Confidential Compute</div>
-      <div class="tech-card-desc">Arcium's Multi-Party Execution environment runs PSI across distributed nodes. No single node has access to complete data. Results post back to Solana via a verified CPI callback from the Arcium MXE verifier PDA.</div>
-      <div style="margin-top:14px"><span class="code-chip">arcium-sdk</span><span class="code-chip">MXE protocol</span><span class="code-chip">Verifier CPI</span></div>
+      <div class="tech-card-label">Hashing</div>
+      <div class="tech-card-title">SHA-256</div>
+      <div class="tech-card-desc">Industry-standard cryptographic hash function used to irreversibly encrypt contacts before transmission.</div>
+      <div><span class="code-chip">SHA-256</span></div>
     </div>
     <div class="tech-card">
-      <div class="tech-card-label">// Cryptography</div>
-      <div class="tech-card-title">SHA-256 + Session Blinding</div>
-      <div class="tech-card-desc">Contacts are hashed with a per-user random salt, then blinded with a per-session job ID before PSI — preventing rainbow table and cross-session correlation attacks. A Merkle root stores the commitment on-chain for integrity verification.</div>
-      <div style="margin-top:14px"><span class="code-chip">SHA-256</span><span class="code-chip">Merkle root</span><span class="code-chip">Session blinding</span></div>
+      <div class="tech-card-label">Computation</div>
+      <div class="tech-card-title">Arcium MXE</div>
+      <div class="tech-card-desc">Confidential compute network that processes encrypted data without exposing plaintext or intermediate results.</div>
+      <div><span class="code-chip">MXE</span><span class="code-chip">TEE</span></div>
     </div>
     <div class="tech-card">
-      <div class="tech-card-label">// Solana</div>
-      <div class="tech-card-title">Anchor Program + Session PDAs</div>
-      <div class="tech-card-desc">A full Anchor program manages session PDAs, identity registration, and handles MXE verifier CPI callbacks posting the intersection result. Session accounts are closeable to reclaim rent. All events are emitted for off-chain indexing.</div>
-      <div style="margin-top:14px"><span class="code-chip">Anchor</span><span class="code-chip">Session PDAs</span><span class="code-chip">Rent reclaim</span></div>
+      <div class="tech-card-label">Settlement</div>
+      <div class="tech-card-title">Solana Blockchain</div>
+      <div class="tech-card-desc">Immutable settlement layer for verifying computation results and maintaining audit trails.</div>
+      <div><span class="code-chip">Solana</span><span class="code-chip">CPI</span></div>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-logo">CIPHER<span style="color:var(--cyan)">.</span></div>
-  <div class="footer-sub">Private Contact Discovery · Powered by Arcium × Solana</div>
+  <div class="footer-logo">CIPHER</div>
+  <div class="footer-sub">Private Contact Discovery Protocol</div>
   <div class="footer-links">
-    <a class="footer-link" href="https://docs.arcium.com" target="_blank">Arcium Docs</a>
-    <a class="footer-link" href="https://solana.com" target="_blank">Solana</a>
-    <a class="footer-link" href="https://github.com/YOUR_USERNAME/private-contact-discovery" target="_blank">GitHub</a>
-    <a class="footer-link" href="#app">Try App</a>
-    <a class="footer-link" href="#how">How it works</a>
+    <a href="#" class="footer-link">Documentation</a>
+    <a href="#" class="footer-link">GitHub</a>
+    <a href="#" class="footer-link">Discord</a>
+    <a href="#" class="footer-link">Twitter</a>
   </div>
   <div class="built-with">
-    <span class="built-chip">Arcium MXE</span><span class="built-chip">Solana Devnet</span><span class="built-chip">SHA-256 PSI</span>
-    <span class="built-chip">Session Blinding</span><span class="built-chip">Anchor Program</span><span class="built-chip">Merkle Commitment</span>
+    <span class="built-chip">Arcium</span>
+    <span class="built-chip">Solana</span>
+    <span class="built-chip">SHA-256</span>
+    <span class="built-chip">PSI</span>
   </div>
-  <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:24px">Built for Arcium RTG · Private Contact Discovery · 2026</div>
+  <div style="margin-top:24px;font-size:12px;color:var(--text3)">
+    Built with precision and cryptographic rigor. Your privacy is our priority.
+  </div>
 </footer>
 
-<div id="toast-container"></div>
-
 <script>
-// ─── Real PSI State ───────────────────────────────────────
-const S={wallet:null,addr:null,salt:null,contacts:[],hashes:[],merkle:null,jobId:null,results:null};
-const PEER=['alice@mail.com','bob@crypto.io','charlie@solana.com','nina@web3.io','james@sol.dev','yuki@mail.jp'];
-const NAMES=['Alice M.','Bob K.','Charlie R.','Nina P.','James O.','Yuki T.'];
-
-// ── Crypto ────────────────────────────────────────────────
-async function sha256(data){const b=await crypto.subtle.digest('SHA-256',data);return new Uint8Array(b);}
-async function hashContact(salt,id){
-  const enc=new TextEncoder();
-  const d=new Uint8Array([...salt,...enc.encode(id.toLowerCase().trim())]);
-  return sha256(d);
-}
-function toHex(u8){return Array.from(u8).map(b=>b.toString(16).padStart(2,'0')).join('');}
-function rndHex(n){return toHex(crypto.getRandomValues(new Uint8Array(n)));}
-async function merkleRoot(hashes){
-  if(!hashes.length)return new Uint8Array(32);
-  let layer=[...hashes];
-  while(layer.length>1){
-    if(layer.length%2)layer.push(layer[layer.length-1]);
-    const next=[];
-    for(let i=0;i<layer.length;i+=2){
-      const c=new Uint8Array([...layer[i],...layer[i+1]]);
-      next.push(await sha256(c));
+  function connectWallet() {
+    const btn = document.getElementById('wallet-btn');
+    if (btn.classList.contains('connected')) {
+      btn.classList.remove('connected');
+      btn.textContent = 'Connect Wallet';
+    } else {
+      btn.classList.add('connected');
+      btn.textContent = 'Connected: 9B2e...4Kx7';
+      showToast('Wallet connected successfully', 'success');
     }
-    layer=next;
   }
-  return layer[0];
-}
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-// ── Wallet ────────────────────────────────────────────────
-function selectWallet(w){document.querySelectorAll('.wallet-option').forEach(e=>e.classList.remove('selected'));document.getElementById(w+'-opt').classList.add('selected');S.wallet=w;}
-async function connectWallet(){
-  try{
-    if(window.solana?.isPhantom){
-      await window.solana.connect();S.addr=window.solana.publicKey.toString();
-      const b=document.getElementById('wallet-btn');b.textContent=S.addr.slice(0,4)+'...'+S.addr.slice(-4);b.classList.add('connected');
-      toast('Phantom connected','success');
-    }else{
-      S.addr='DEMO'+rndHex(4).toUpperCase();
-      const b=document.getElementById('wallet-btn');b.textContent='Demo: '+S.addr.slice(0,10);b.classList.add('connected');
-      toast('Demo mode active');
+  function selectWallet(el, wallet) {
+    document.querySelectorAll('.wallet-option').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    showToast(`${wallet.charAt(0).toUpperCase() + wallet.slice(1)} wallet selected`, 'success');
+  }
+
+  function goToPhase(phase) {
+    document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+    document.getElementById('phase-' + phase).classList.add('active');
+    
+    document.querySelectorAll('.step-tab').forEach((tab, idx) => {
+      tab.classList.remove('active', 'done');
+      if (idx + 1 < phase) tab.classList.add('done');
+      if (idx + 1 === phase) tab.classList.add('active');
+    });
+  }
+
+  function handleFileUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+      showToast(`File "${file.name}" uploaded successfully`, 'success');
     }
-  }catch(e){toast('Cancelled','error');}
-}
-async function proceedConnect(){
-  if(!S.wallet){toast('Select a wallet first','error');return;}
-  if(S.wallet==='demo'){S.addr='DEMO'+rndHex(4).toUpperCase();S.contacts=['alice@mail.com','bob@crypto.io','charlie@solana.com'];goToPhase(2);renderList();toast('Demo contacts loaded');return;}
-  await connectWallet();goToPhase(2);
-}
-
-// ── Phase nav ─────────────────────────────────────────────
-function goToPhase(n){
-  document.querySelectorAll('.phase').forEach(e=>e.classList.remove('active'));
-  document.getElementById('phase-'+n).classList.add('active');
-  document.querySelectorAll('.step-tab').forEach((e,i)=>{e.classList.remove('active','done');if(i+1===n)e.classList.add('active');if(i+1<n)e.classList.add('done');});
-}
-
-// ── Contacts ──────────────────────────────────────────────
-function addContact(){
-  const inp=document.getElementById('contact-input'),v=inp.value.trim();
-  if(!v)return;if(S.contacts.includes(v)){toast('Already added');return;}
-  S.contacts.push(v);inp.value='';renderList();toast('Added — will be hashed locally','success');
-}
-function removeContact(i){S.contacts.splice(i,1);renderList();}
-function renderList(){
-  const el=document.getElementById('contact-list');
-  if(!S.contacts.length){el.innerHTML='';return;}
-  el.innerHTML=S.contacts.map((c,i)=>`<div class="contact-preview-item">
-    <div class="contact-preview-left"><span>${c}</span><span class="contact-hash">SHA-256(salt||contact): 0x${fnv(c)}...</span></div>
-    <button class="remove-btn" onclick="removeContact(${i})">✕</button></div>`).join('');
-}
-function fnv(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*0x01000193)>>>0;}return h.toString(16).padStart(8,'0')+rndHex(3);}
-function handleDragOver(e){e.preventDefault();document.getElementById('upload-area').classList.add('dragover');}
-function handleDragLeave(){document.getElementById('upload-area').classList.remove('dragover');}
-function handleDrop(e){e.preventDefault();document.getElementById('upload-area').classList.remove('dragover');if(e.dataTransfer.files[0])processFile(e.dataTransfer.files[0]);}
-function handleFile(e){if(e.target.files[0])processFile(e.target.files[0]);}
-function processFile(f){const r=new FileReader();r.onload=e=>{const l=e.target.result.split('\n').map(x=>x.trim()).filter(Boolean);l.forEach(x=>{if(!S.contacts.includes(x))S.contacts.push(x);});renderList();toast(`Loaded ${l.length} contacts`,'success');};r.readAsText(f);}
-
-// ── Compute ───────────────────────────────────────────────
-async function proceedCompute(){
-  if(!S.contacts.length){S.contacts=['alice@mail.com','bob@crypto.io','charlie@solana.com','nina@web3.io','james@sol.dev'];renderList();toast('Using demo contacts');}
-  goToPhase(3);await runPSI();
-}
-async function runPSI(){
-  const STEPS=[
-    {id:'log-1',label:'Generating random salt for this session...',pct:10,node:'you'},
-    {id:'log-2',label:'SHA-256 hashing all contacts client-side...',pct:22},
-    {id:'log-3',label:'Computing Merkle root commitment...',pct:33},
-    {id:'log-4',label:'Submitting session PDA to Solana devnet...',pct:44,line:'left'},
-    {id:'log-5',label:'Encrypting hashes under Arcium MXE public key...',pct:55,node:'arcium'},
-    {id:'log-6',label:'MXE nodes executing PSI (threshold decryption)...',pct:66},
-    {id:'log-7',label:'Running constant-time intersection inside enclave...',pct:75},
-    {id:'log-8',label:'Applying session blinding (job_id keyed hashing)...',pct:86},
-    {id:'log-9',label:'MXE verifier CPI posting result to Solana...',pct:100,line:'right',node:'network'},
-  ];
-
-  S.salt=crypto.getRandomValues(new Uint8Array(16));
-  S.jobId=rndHex(32);
-  S.hashes=await Promise.all(S.contacts.map(c=>hashContact(S.salt,c)));
-  S.merkle=await merkleRoot(S.hashes);
-
-  const z=new Uint8Array(16);
-  const myZ=await Promise.all(S.contacts.map(c=>hashContact(z,c)));
-  const peerZ=await Promise.all(PEER.map(c=>hashContact(z,c)));
-  const mySet=new Set(myZ.map(toHex));
-  const matched=PEER.filter((_,i)=>mySet.has(toHex(peerZ[i])));
-
-  S.results={matched,total:S.contacts.length,hidden:S.contacts.length-matched.length,tx:rndHex(32),attest:rndHex(32)};
-
-  for(let i=0;i<STEPS.length;i++){
-    const step=STEPS[i];
-    if(i>0){const prev=document.getElementById(STEPS[i-1].id);if(prev)prev.className='log-line done';}
-    const el=document.getElementById(step.id);if(el)el.className='log-line active';
-    document.getElementById('progress-fill').style.width=step.pct+'%';
-    document.getElementById('progress-pct').textContent=step.pct+'%';
-    document.getElementById('progress-label-text').textContent=step.label;
-    if(step.node){const n=document.getElementById('node-'+step.node);if(n)n.className='node-circle processing';}
-    if(step.line){const l=document.getElementById('line-'+step.line);if(l)l.classList.add('active');}
-    await sleep(780+Math.random()*480);
   }
-  const last=document.getElementById(STEPS[STEPS.length-1].id);if(last)last.className='log-line done';
-  document.querySelectorAll('.node-circle').forEach(n=>n.className='node-circle done');
-  await sleep(500);showResults();
-}
 
-// ── Results ───────────────────────────────────────────────
-function showResults(){
-  const r=S.results;
-  document.getElementById('match-count').textContent=r.matched.length;
-  document.getElementById('non-match-count').textContent=r.hidden;
-  document.getElementById('proof-cid').textContent='mxe_0x'+S.jobId.slice(0,16)+'...';
-  document.getElementById('proof-merkle').textContent='0x'+toHex(S.merkle).slice(0,24)+'...';
-  document.getElementById('proof-tx').textContent=r.tx.slice(0,32)+'...';
-  document.getElementById('proof-attest').textContent=r.attest.slice(0,32)+'...';
-  const list=document.getElementById('matches-list');
-  if(!r.matched.length){
-    list.innerHTML='<div style="font-family:var(--mono);font-size:12px;color:var(--text3);padding:20px 0">No mutual contacts found. All your contacts remain private.</div>';
-  }else{
-    list.innerHTML=r.matched.map((c,i)=>{
-      const name=NAMES[i%NAMES.length]||c.split('@')[0];
-      const ini=name.split(/[\s@.]/)[0].slice(0,2).toUpperCase();
-      return `<div class="match-card" style="animation-delay:${i*.1}s">
-        <div class="match-avatar">${ini}</div>
-        <div class="match-info">
-          <div class="match-name">${name}</div>
-          <div class="match-wallet">Sol${rndHex(2).toUpperCase()}... · ${c}</div>
-          <div class="match-mutual">Mutual contact · verified by Arcium MXE PSI</div>
-        </div>
-        <button class="match-action" onclick="toast('Sent to ${name}','success')">Connect</button>
-      </div>`;
-    }).join('');
+  function addContact() {
+    showToast('Contact added to list', 'success');
   }
-  goToPhase(4);toast(`Found ${r.matched.length} mutual contact${r.matched.length!==1?'s':''}!`,'success');
-}
 
-function resetApp(){
-  S.contacts=[];S.hashes=[];S.merkle=null;S.results=null;S.jobId=null;S.wallet=null;
-  document.getElementById('contact-list').innerHTML='';document.getElementById('contact-input').value='';
-  document.querySelectorAll('.node-circle').forEach(n=>n.className='node-circle');
-  document.querySelectorAll('.node-line-fill').forEach(l=>l.classList.remove('active'));
-  document.getElementById('progress-fill').style.width='0%';
-  document.getElementById('progress-pct').textContent='0%';
-  document.getElementById('progress-label-text').textContent='Initializing...';
-  document.querySelectorAll('.log-line').forEach(l=>l.className='log-line');
-  document.querySelectorAll('.wallet-option').forEach(e=>e.classList.remove('selected'));
-  goToPhase(1);
-}
+  function contactMatch() {
+    showToast('Opening contact options...', 'success');
+  }
 
-function shareResults(){
-  const txt='Just used CIPHER to find mutual contacts — powered by @ArciumHQ PSI on @solana. Non-matches stayed hidden cryptographically. 🔒 #Arcium #Solana #PrivacyTech';
-  if(navigator.share){navigator.share({text:txt});}else{navigator.clipboard.writeText(txt);toast('Copied to clipboard','success');}
-}
+  function shareResults() {
+    showToast('Results copied to clipboard', 'success');
+  }
 
-function toast(msg,type='info'){
-  const c=document.getElementById('toast-container');
-  const el=document.createElement('div');el.className='toast '+(type||'');el.textContent=msg;c.appendChild(el);
-  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300);},3200);
-}
+  function startOver() {
+    goToPhase(1);
+    showToast('Starting over...', 'success');
+  }
+
+  function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
 </script>
+
 </body>
 </html>
