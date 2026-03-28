@@ -1,0 +1,22 @@
+[package]
+name = "arcium-mxe"
+version = "0.1.0"
+edition = "2021"
+description = "Arcium MXE computation: Private Set Intersection for contact discovery"
+
+[[bin]]
+name = "psi-mxe"
+path = "src/main.rs"
+
+[dependencies]
+# Arcium MXE SDK — provides encrypted input/output primitives
+arcium-mxe-sdk = { git = "https://github.com/arcium-hq/arcium-mxe-sdk", branch = "main", optional = true }
+sha2 = "0.10.8"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+hex = "0.4.3"
+rayon = "1.10"
+
+[features]
+default = []
+arcium = ["arcium-mxe-sdk"]
