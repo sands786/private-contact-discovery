@@ -1,4 +1,4 @@
-v<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -1593,6 +1593,29 @@ v<!DOCTYPE html>
             <div class="contact-list" id="contact-list"></div>
             <button class="btn-primary" onclick="goToPhase(2)">Continue to Next Step</button>
           </div>
+
+          <!-- Manual Email Input Section -->
+          <div class="input-section">
+            <h4>Or Add Contacts Manually</h4>
+            
+            <!-- Single Email Input -->
+            <div style="margin-bottom: 24px;">
+              <p class="email-hint">Add individual email addresses</p>
+              <div class="email-input-group">
+                <input type="email" id="manual-email" placeholder="Enter email address (e.g., contact@example.com)" onkeypress="handleEmailKeyPress(event)">
+                <button class="add-email-btn" onclick="addManualEmail()">Add Email</button>
+              </div>
+            </div>
+
+            <!-- Multiple Emails Input -->
+            <div style="border-top: 1px solid var(--border); padding-top: 24px;">
+              <p class="email-hint">Or paste multiple emails (comma, line, or space separated)</p>
+              <textarea id="bulk-emails" placeholder="Paste multiple emails here...&#10;Example:&#10;contact1@example.com, contact2@example.com&#10;contact3@example.com&#10;contact4@example.com" style="width: 100%; min-height: 120px; padding: 12px 16px; background: rgba(0, 229, 204, 0.05); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--body); font-size: 14px; resize: vertical; transition: all 0.2s ease;"></textarea>
+              <button class="add-email-btn" onclick="addMultipleEmails()" style="margin-top: 12px; width: 100%;">Add Multiple Emails</button>
+            </div>
+
+            <div id="manual-contacts-list" class="contact-list" style="display: none; margin-top: 24px;"></div>
+          </div>
         </div>
       </div>
 
@@ -1906,6 +1929,86 @@ v<!DOCTYPE html>
       preview.style.display = contacts.length > 0 ? 'block' : 'none';
     }
 
+    function handleEmailKeyPress(e) {
+      if (e.key === 'Enter') {
+        addManualEmail();
+      }
+    }
+
+    function addManualEmail() {
+      const emailInput = document.getElementById('manual-email');
+      const email = emailInput.value.trim().toLowerCase();
+      
+      if (!email) {
+        showToast('Please enter an email address', 'warning');
+        return;
+      }
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showToast('Please enter a valid email address', 'error');
+        return;
+      }
+      
+      if (contacts.includes(email)) {
+        showToast('This email is already in your list', 'warning');
+        return;
+      }
+      
+      contacts.push(email);
+      emailInput.value = '';
+      emailInput.focus();
+      displayContacts();
+      showToast('Email added: ' + email, 'success');
+    }
+
+    function addMultipleEmails() {
+      const bulkInput = document.getElementById('bulk-emails');
+      const text = bulkInput.value.trim();
+      
+      if (!text) {
+        showToast('Please paste or enter email addresses', 'warning');
+        return;
+      }
+      
+      const emailList = text.split(/[,\n\s]+/).filter(e => e.trim());
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      let added = 0;
+      let skipped = 0;
+      let invalid = 0;
+      
+      emailList.forEach(email => {
+        email = email.trim().toLowerCase();
+        
+        if (!email) return;
+        
+        if (!emailRegex.test(email)) {
+          invalid++;
+          return;
+        }
+        
+        if (contacts.includes(email)) {
+          skipped++;
+          return;
+        }
+        
+        contacts.push(email);
+        added++;
+      });
+      
+      if (added > 0) {
+        bulkInput.value = '';
+        displayContacts();
+        let message = 'Added ' + added + ' email' + (added > 1 ? 's' : '');
+        if (skipped > 0) message += ', ' + skipped + ' duplicate' + (skipped > 1 ? 's' : '') + ' skipped';
+        if (invalid > 0) message += ', ' + invalid + ' invalid';
+        showToast(message, 'success');
+      } else {
+        showToast('No valid emails to add', 'error');
+      }
+    }
+
     function removeContact(index) {
       contacts.splice(index, 1);
       displayContacts();
@@ -1986,3 +2089,5 @@ v<!DOCTYPE html>
   </script>
 </body>
 </html>
+
+    // Placeholder - will be replaced
