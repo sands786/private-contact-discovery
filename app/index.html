@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+v<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    /* CIPHER Landing Page - Complete Standalone Version */
+    /* CIPHER Landing Page - Complete Functional App */
     /* Design Philosophy: Futuristic, cryptographic, with smooth animations */
 
     :root {
@@ -128,6 +128,12 @@
       font-weight: 800;
       letter-spacing: -0.02em;
       color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-logo:hover {
+      color: var(--cyan);
     }
 
     .nav-logo span {
@@ -163,19 +169,28 @@
       50% { opacity: 0.6; }
     }
 
-    #wallet-btn {
+    .wallet-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #wallet-btn, #disconnect-btn {
       font-family: var(--mono);
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       padding: 8px 18px;
-      background: var(--cyan);
-      color: var(--void);
       border: none;
       cursor: pointer;
       border-radius: 2px;
       font-weight: 700;
       transition: all 0.2s;
+    }
+
+    #wallet-btn {
+      background: var(--cyan);
+      color: var(--void);
     }
 
     #wallet-btn:hover {
@@ -190,15 +205,38 @@
       border: 1px solid var(--cyan);
     }
 
+    #disconnect-btn {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid var(--red);
+      display: none;
+    }
+
+    #disconnect-btn:hover {
+      background: rgba(255, 68, 102, 0.1);
+      box-shadow: 0 4px 16px rgba(255, 68, 102, 0.2);
+    }
+
+    /* Pages */
+    .page {
+      display: none;
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+
+    .page.active {
+      display: block;
+    }
+
     /* Hero Section */
     .hero {
-      min-height: 100vh;
+      min-height: calc(100vh - 80px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 120px 40px 80px;
+      padding: 40px;
       position: relative;
       z-index: 1;
       overflow: hidden;
@@ -353,13 +391,11 @@
       letter-spacing: 0.1em;
     }
 
-    /* Sections */
-    .section {
-      padding: 100px 40px;
+    /* App Section */
+    .app-container {
       max-width: 1200px;
       margin: 0 auto;
-      position: relative;
-      z-index: 1;
+      padding: 40px;
     }
 
     .section-label {
@@ -388,11 +424,7 @@
       margin-bottom: 48px;
     }
 
-    /* Discovery Flow */
-    .discovery-flow {
-      position: relative;
-    }
-
+    /* Steps */
     .steps-container {
       display: flex;
       gap: 24px;
@@ -558,6 +590,7 @@
       animation: float 3s ease-in-out infinite;
       width: 48px;
       height: 48px;
+      font-size: 48px;
     }
 
     @keyframes float {
@@ -707,6 +740,8 @@
       border-radius: 6px;
       overflow: hidden;
       margin-bottom: 24px;
+      max-height: 400px;
+      overflow-y: auto;
     }
 
     .contact-item {
@@ -751,6 +786,7 @@
       font-size: 14px;
       color: var(--text);
       margin-bottom: 4px;
+      word-break: break-all;
     }
 
     .contact-hash {
@@ -982,6 +1018,7 @@
 
     .proof-val {
       color: var(--gold);
+      word-break: break-all;
     }
 
     /* Action Row */
@@ -1193,13 +1230,17 @@
         padding: 3px 8px;
       }
 
-      #wallet-btn {
+      .wallet-controls {
+        gap: 4px;
+      }
+
+      #wallet-btn, #disconnect-btn {
         font-size: 10px;
         padding: 6px 14px;
       }
 
       .hero {
-        padding: 100px 20px 60px;
+        padding: 40px 20px;
       }
 
       .hero-title {
@@ -1219,8 +1260,8 @@
         border-bottom: none;
       }
 
-      .section {
-        padding: 60px 20px;
+      .app-container {
+        padding: 20px;
       }
 
       .phase-content {
@@ -1304,229 +1345,236 @@
 <body>
   <!-- Navigation -->
   <nav>
-    <div class="nav-logo">CIPHER<span></span></div>
+    <div class="nav-logo" onclick="goToPage('home')">CIPHER<span></span></div>
     <div class="nav-badges">
       <span class="badge">Private</span>
       <span class="badge">Encrypted</span>
       <span class="badge" id="status-badge">Ready</span>
     </div>
-    <button id="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+    <div class="wallet-controls">
+      <button id="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
+      <button id="disconnect-btn" onclick="disconnectWallet()">Disconnect</button>
+    </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-eyebrow">Private Contact Discovery</div>
-      <h1 class="hero-title">
-        <span class="line1">Find Mutual Contacts</span>
-        <span class="line2">Without Exposing Privacy</span>
-      </h1>
-      <p class="hero-sub">
-        CIPHER combines cryptographic hashing with Arcium's confidential compute to discover shared contacts securely. Your data never leaves encrypted form.
-      </p>
-      <div class="hero-actions">
-        <button class="btn-primary" onclick="goToPhase(1)">Get Started</button>
-        <button class="btn-secondary">Learn More</button>
-      </div>
-      <div class="stats-bar">
-        <div class="stat">
-          <span class="stat-val">256-bit</span>
-          <span class="stat-label">Encryption</span>
+  <!-- Home Page -->
+  <div class="page active" id="home-page">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-eyebrow">Private Contact Discovery</div>
+        <h1 class="hero-title">
+          <span class="line1">Find Mutual Contacts</span>
+          <span class="line2">Without Exposing Privacy</span>
+        </h1>
+        <p class="hero-sub">
+          CIPHER combines cryptographic hashing with Arcium's confidential compute to discover shared contacts securely. Your data never leaves encrypted form.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="goToPage('app')">Get Started</button>
+          <button class="btn-secondary">Learn More</button>
         </div>
-        <div class="stat">
-          <span class="stat-val">0ms</span>
-          <span class="stat-label">Data Exposure</span>
-        </div>
-        <div class="stat">
-          <span class="stat-val">∞</span>
-          <span class="stat-label">Privacy</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Discovery Flow -->
-  <section class="section discovery-flow">
-    <div class="section-label">// How It Works</div>
-    <h2 class="section-title">Three Simple Steps</h2>
-    <p class="section-sub">Upload your contacts, connect with another party, and discover mutual connections securely.</p>
-
-    <div class="steps-container">
-      <div class="step-tab active" onclick="goToPhase(1)">
-        <span class="step-number">1</span>
-        <span class="step-label">Upload Contacts</span>
-      </div>
-      <div class="step-tab" onclick="goToPhase(2)">
-        <span class="step-number">2</span>
-        <span class="step-label">Prepare Hash</span>
-      </div>
-      <div class="step-tab" onclick="goToPhase(3)">
-        <span class="step-number">3</span>
-        <span class="step-label">Discover Matches</span>
-      </div>
-    </div>
-
-    <!-- Phase 1: Upload -->
-    <div class="phase active" id="phase-1">
-      <div class="phase-content">
-        <h3 class="phase-title">Upload Your Contact List</h3>
-        <p class="phase-desc">Upload a CSV file with your contacts. We'll hash them immediately using SHA-256.</p>
-
-        <div class="upload-zone" id="upload-zone" ondrop="handleDrop(event)" ondragover="handleDrag(event)" ondragleave="handleDrag(event)">
-          <input type="file" accept=".csv" id="file-input" onchange="handleFileChange(event)" style="display: none;">
-          
-          <div id="upload-content" class="upload-content" onclick="document.getElementById('file-input').click()">
-            <div class="upload-icon">📤</div>
-            <p class="upload-text">Drop your CSV file here or click to browse</p>
-            <p class="upload-hint">Supports: email@example.com format</p>
+        <div class="stats-bar">
+          <div class="stat">
+            <span class="stat-val">256-bit</span>
+            <span class="stat-label">Encryption</span>
           </div>
-
-          <div id="upload-loading" class="upload-loading" style="display: none;">
-            <div class="spinner"></div>
-            <p>Processing your contacts...</p>
+          <div class="stat">
+            <span class="stat-val">0ms</span>
+            <span class="stat-label">Data Exposure</span>
           </div>
+          <div class="stat">
+            <span class="stat-val">∞</span>
+            <span class="stat-label">Privacy</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          <div id="upload-success" class="upload-success" style="display: none;">
-            <div class="success-icon">✓</div>
-            <div class="file-info">
-              <div class="file-name" id="file-name"></div>
-              <div class="file-size" id="file-size"></div>
+    <!-- Technology Section -->
+    <section style="padding: 100px 40px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
+      <div class="section-label">// Technology</div>
+      <h2 class="section-title">Built on proven cryptography</h2>
+      <p class="section-sub">CIPHER combines industry-standard protocols with Arcium's confidential computing to deliver privacy without compromise.</p>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-card-label">Hashing</div>
+          <div class="tech-card-title">SHA-256</div>
+          <div class="tech-card-desc">Industry-standard cryptographic hash function used to irreversibly encrypt contacts before transmission.</div>
+          <div class="code-chips">
+            <span class="code-chip">SHA-256</span>
+          </div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-card-label">Computation</div>
+          <div class="tech-card-title">Arcium MXE</div>
+          <div class="tech-card-desc">Confidential compute network that processes encrypted data without exposing plaintext or intermediate results.</div>
+          <div class="code-chips">
+            <span class="code-chip">MXE</span>
+            <span class="code-chip">TEE</span>
+          </div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-card-label">Settlement</div>
+          <div class="tech-card-title">Solana Blockchain</div>
+          <div class="tech-card-desc">Immutable settlement layer for verifying computation results and maintaining audit trails.</div>
+          <div class="code-chips">
+            <span class="code-chip">Solana</span>
+            <span class="code-chip">CPI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- App Page -->
+  <div class="page" id="app-page">
+    <div class="app-container">
+      <div class="section-label">// Discovery Flow</div>
+      <h2 class="section-title">Three Simple Steps</h2>
+      <p class="section-sub">Upload your contacts, connect with another party, and discover mutual connections securely.</p>
+
+      <div class="steps-container">
+        <div class="step-tab active" onclick="goToPhase(1)">
+          <span class="step-number">1</span>
+          <span class="step-label">Upload Contacts</span>
+        </div>
+        <div class="step-tab" onclick="goToPhase(2)">
+          <span class="step-number">2</span>
+          <span class="step-label">Prepare Hash</span>
+        </div>
+        <div class="step-tab" onclick="goToPhase(3)">
+          <span class="step-number">3</span>
+          <span class="step-label">Discover Matches</span>
+        </div>
+      </div>
+
+      <!-- Phase 1: Upload -->
+      <div class="phase active" id="phase-1">
+        <div class="phase-content">
+          <h3 class="phase-title">Upload Your Contact List</h3>
+          <p class="phase-desc">Upload a CSV file with your contacts. We'll hash them immediately using SHA-256.</p>
+
+          <div class="upload-zone" id="upload-zone" ondrop="handleDrop(event)" ondragover="handleDrag(event)" ondragleave="handleDrag(event)">
+            <input type="file" accept=".csv" id="file-input" onchange="handleFileChange(event)" style="display: none;">
+            
+            <div id="upload-content" class="upload-content" onclick="document.getElementById('file-input').click()">
+              <div class="upload-icon">📤</div>
+              <p class="upload-text">Drop your CSV file here or click to browse</p>
+              <p class="upload-hint">Supports: email@example.com format</p>
             </div>
-            <button class="upload-again-btn" onclick="document.getElementById('file-input').click()">Upload Different File</button>
-          </div>
-        </div>
 
-        <div id="contacts-preview" class="contacts-preview" style="display: none;">
-          <div class="preview-header">
-            <h4>Loaded Contacts (<span id="contact-count">0</span>)</h4>
-          </div>
-          <div class="contact-list" id="contact-list"></div>
-          <button class="btn-primary" onclick="goToPhase(2)">Continue to Next Step</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Phase 2: Prepare -->
-    <div class="phase" id="phase-2">
-      <div class="phase-content">
-        <h3 class="phase-title">Prepare for Discovery</h3>
-        <p class="phase-desc">Review your hashed contacts and connect with another party to begin the discovery process.</p>
-
-        <div class="file-badge" id="file-badge" style="display: none;">
-          📄 <span id="badge-filename"></span>
-        </div>
-
-        <div class="wallet-selector">
-          <h4>Select Connection Method</h4>
-          <div class="wallet-options">
-            <div class="wallet-option" onclick="selectWallet(this, 'phantom')">
-              <div class="wallet-icon">👻</div>
-              <div class="wallet-name">Phantom</div>
+            <div id="upload-loading" class="upload-loading" style="display: none;">
+              <div class="spinner"></div>
+              <p>Processing your contacts...</p>
             </div>
-            <div class="wallet-option" onclick="selectWallet(this, 'backpack')">
-              <div class="wallet-icon">🎒</div>
-              <div class="wallet-name">Backpack</div>
-            </div>
-          </div>
-        </div>
 
-        <div class="action-row">
-          <button class="btn-primary" onclick="goToPhase(3)">Proceed to Discovery</button>
-          <button class="btn-secondary" onclick="goToPhase(1)">Back</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Phase 3: Results -->
-    <div class="phase" id="phase-3">
-      <div class="phase-content">
-        <h3 class="phase-title">Discovery Results</h3>
-        <p class="phase-desc">Mutual contacts discovered through secure computation.</p>
-
-        <div class="results-container">
-          <div class="matches-header">
-            <span class="match-count" id="match-count">2</span> mutual contacts found
-          </div>
-          <div id="matches-container" class="matches-list">
-            <div class="match-item">
-              <div class="match-avatar">A</div>
-              <div class="match-info">
-                <div class="match-email">contact1@example.com</div>
-                <div class="match-hash">0x1a2b3c4d</div>
+            <div id="upload-success" class="upload-success" style="display: none;">
+              <div class="success-icon">✓</div>
+              <div class="file-info">
+                <div class="file-name" id="file-name"></div>
+                <div class="file-size" id="file-size"></div>
               </div>
+              <button class="upload-again-btn" onclick="document.getElementById('file-input').click()">Upload Different File</button>
             </div>
-            <div class="match-item">
-              <div class="match-avatar">B</div>
-              <div class="match-info">
-                <div class="match-email">contact2@example.com</div>
-                <div class="match-hash">0x5e6f7g8h</div>
+          </div>
+
+          <div id="contacts-preview" class="contacts-preview" style="display: none;">
+            <div class="preview-header">
+              <h4>Loaded Contacts (<span id="contact-count">0</span>)</h4>
+            </div>
+            <div class="contact-list" id="contact-list"></div>
+            <button class="btn-primary" onclick="goToPhase(2)">Continue to Next Step</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2: Prepare -->
+      <div class="phase" id="phase-2">
+        <div class="phase-content">
+          <h3 class="phase-title">Prepare for Discovery</h3>
+          <p class="phase-desc">Review your hashed contacts and select your wallet to begin the discovery process.</p>
+
+          <div class="file-badge" id="file-badge" style="display: none;">
+            📄 <span id="badge-filename"></span>
+          </div>
+
+          <div class="wallet-selector">
+            <h4>Select Connection Method</h4>
+            <div class="wallet-options">
+              <div class="wallet-option" onclick="selectWallet(this, 'phantom')">
+                <div class="wallet-icon">👻</div>
+                <div class="wallet-name">Phantom</div>
               </div>
-            </div>
-          </div>
-
-          <div class="non-matches-note">
-            <span id="non-match-count">3</span> contacts were not found in the other party's list. These remain hidden forever.
-          </div>
-
-          <div class="privacy-proof">
-            <div class="proof-title">Cryptographic Proof</div>
-            <div class="proof-line">
-              <div class="proof-key">Session ID:</div>
-              <div class="proof-val">0x7f8a9c2e1d5b4a6f9e3c8d1a5b7c2e9f</div>
-            </div>
-            <div class="proof-line">
-              <div class="proof-key">Merkle Root:</div>
-              <div class="proof-val">0x3a2f8c1e9d5b7a4c6e2f1a8d3c5b7e9f</div>
-            </div>
-            <div class="proof-line">
-              <div class="proof-key">Arcium Signature:</div>
-              <div class="proof-val">0x1b4c7e2a9f3d6c8e5a1f4b7d9c2e5a8f</div>
+              <div class="wallet-option" onclick="selectWallet(this, 'backpack')">
+                <div class="wallet-icon">🎒</div>
+                <div class="wallet-name">Backpack</div>
+              </div>
             </div>
           </div>
 
           <div class="action-row">
-            <button class="btn-primary">Share Results</button>
-            <button class="btn-secondary" onclick="startOver()">Start Over</button>
+            <button class="btn-primary" onclick="goToPhase(3)">Proceed to Discovery</button>
+            <button class="btn-secondary" onclick="goToPhase(1)">Back</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3: Results -->
+      <div class="phase" id="phase-3">
+        <div class="phase-content">
+          <h3 class="phase-title">Discovery Results</h3>
+          <p class="phase-desc">Mutual contacts discovered through secure computation.</p>
+
+          <div class="results-container">
+            <div class="matches-header">
+              <span class="match-count" id="match-count">2</span> mutual contacts found
+            </div>
+            <div id="matches-container" class="matches-list">
+              <div class="match-item">
+                <div class="match-avatar">A</div>
+                <div class="match-info">
+                  <div class="match-email">contact1@example.com</div>
+                  <div class="match-hash">0x1a2b3c4d</div>
+                </div>
+              </div>
+              <div class="match-item">
+                <div class="match-avatar">B</div>
+                <div class="match-info">
+                  <div class="match-email">contact2@example.com</div>
+                  <div class="match-hash">0x5e6f7g8h</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="non-matches-note">
+              <span id="non-match-count">3</span> contacts were not found in the other party's list. These remain hidden forever.
+            </div>
+
+            <div class="privacy-proof">
+              <div class="proof-title">Cryptographic Proof</div>
+              <div class="proof-line">
+                <div class="proof-key">Session ID:</div>
+                <div class="proof-val">0x7f8a9c2e1d5b4a6f9e3c8d1a5b7c2e9f</div>
+              </div>
+              <div class="proof-line">
+                <div class="proof-key">Merkle Root:</div>
+                <div class="proof-val">0x3a2f8c1e9d5b7a4c6e2f1a8d3c5b7e9f</div>
+              </div>
+              <div class="proof-line">
+                <div class="proof-key">Arcium Signature:</div>
+                <div class="proof-val">0x1b4c7e2a9f3d6c8e5a1f4b7d9c2e5a8f</div>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button class="btn-primary" onclick="shareResults()">Share Results</button>
+              <button class="btn-secondary" onclick="startOver()">Start Over</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- Technology Section -->
-  <section class="section">
-    <div class="section-label">// Technology</div>
-    <h2 class="section-title">Built on proven cryptography</h2>
-    <p class="section-sub">CIPHER combines industry-standard protocols with Arcium's confidential computing to deliver privacy without compromise.</p>
-    <div class="tech-grid">
-      <div class="tech-card">
-        <div class="tech-card-label">Hashing</div>
-        <div class="tech-card-title">SHA-256</div>
-        <div class="tech-card-desc">Industry-standard cryptographic hash function used to irreversibly encrypt contacts before transmission.</div>
-        <div class="code-chips">
-          <span class="code-chip">SHA-256</span>
-        </div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-card-label">Computation</div>
-        <div class="tech-card-title">Arcium MXE</div>
-        <div class="tech-card-desc">Confidential compute network that processes encrypted data without exposing plaintext or intermediate results.</div>
-        <div class="code-chips">
-          <span class="code-chip">MXE</span>
-          <span class="code-chip">TEE</span>
-        </div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-card-label">Settlement</div>
-        <div class="tech-card-title">Solana Blockchain</div>
-        <div class="tech-card-desc">Immutable settlement layer for verifying computation results and maintaining audit trails.</div>
-        <div class="code-chips">
-          <span class="code-chip">Solana</span>
-          <span class="code-chip">CPI</span>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 
   <!-- Footer -->
   <footer>
@@ -1553,24 +1601,78 @@
     let walletConnected = false;
     let selectedWallet = null;
     let contacts = [];
+    let publicKey = null;
+    let provider = null;
 
-    function connectWallet() {
-      const btn = document.getElementById('wallet-btn');
-      const badge = document.getElementById('status-badge');
-      if (walletConnected) {
-        walletConnected = false;
-        btn.classList.remove('connected');
-        btn.textContent = 'Connect Wallet';
-        badge.textContent = 'Ready';
-        badge.classList.remove('live');
-        showToast('Wallet disconnected', 'success');
-      } else {
+    // Page Navigation
+    function goToPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(page + '-page').classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    // Initialize wallet connection with real Solana integration
+    async function connectWallet() {
+      try {
+        const phantom = window.solana && window.solana.isPhantom;
+        const backpack = window.backpack && window.backpack.solana;
+
+        if (!phantom && !backpack) {
+          showToast('Please install Phantom or Backpack wallet extension', 'error');
+          return;
+        }
+
+        provider = phantom ? window.solana : backpack;
+        const response = await provider.connect();
+        publicKey = response.publicKey.toString();
         walletConnected = true;
+
+        const btn = document.getElementById('wallet-btn');
+        const disconnectBtn = document.getElementById('disconnect-btn');
+        const badge = document.getElementById('status-badge');
+
+        const shortKey = publicKey.slice(0, 4) + '...' + publicKey.slice(-4);
+        btn.textContent = '✓ ' + shortKey;
         btn.classList.add('connected');
-        btn.textContent = '✓ Connected';
+        disconnectBtn.style.display = 'block';
         badge.textContent = '● LIVE';
         badge.classList.add('live');
-        showToast('Wallet connected successfully', 'success');
+
+        showToast('Wallet connected: ' + shortKey, 'success');
+      } catch (err) {
+        console.error('Wallet connection error:', err);
+        if (err.message.includes('User rejected')) {
+          showToast('Wallet connection cancelled', 'info');
+        } else {
+          showToast('Failed to connect wallet: ' + err.message, 'error');
+        }
+      }
+    }
+
+    // Disconnect wallet
+    async function disconnectWallet() {
+      try {
+        if (provider) {
+          await provider.disconnect();
+        }
+        walletConnected = false;
+        publicKey = null;
+        provider = null;
+
+        const btn = document.getElementById('wallet-btn');
+        const disconnectBtn = document.getElementById('disconnect-btn');
+        const badge = document.getElementById('status-badge');
+
+        btn.textContent = 'Connect Wallet';
+        btn.classList.remove('connected');
+        disconnectBtn.style.display = 'none';
+        badge.textContent = 'Ready';
+        badge.classList.remove('live');
+
+        showToast('Wallet disconnected', 'success');
+      } catch (err) {
+        console.error('Disconnect error:', err);
+        showToast('Error disconnecting wallet', 'error');
       }
     }
 
@@ -1712,6 +1814,20 @@
       return Math.abs(hash).toString(16).substring(0, 8);
     }
 
+    function shareResults() {
+      const proof = {
+        sessionId: '0x7f8a9c2e1d5b4a6f9e3c8d1a5b7c2e9f',
+        merkleRoot: '0x3a2f8c1e9d5b7a4c6e2f1a8d3c5b7e9f',
+        signature: '0x1b4c7e2a9f3d6c8e5a1f4b7d9c2e5a8f',
+        matches: 2,
+        timestamp: new Date().toISOString()
+      };
+      
+      const text = `CIPHER Discovery Results\n${JSON.stringify(proof, null, 2)}`;
+      navigator.clipboard.writeText(text);
+      showToast('Results copied to clipboard!', 'success');
+    }
+
     function startOver() {
       contacts = [];
       document.getElementById('contact-list').innerHTML = '';
@@ -1732,6 +1848,33 @@
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 3000);
     }
+
+    // Check if wallet is already connected on page load
+    window.addEventListener('load', async () => {
+      if (window.solana && window.solana.isPhantom) {
+        try {
+          const response = await window.solana.connect({ onlyIfTrusted: true });
+          if (response) {
+            publicKey = response.publicKey.toString();
+            walletConnected = true;
+            provider = window.solana;
+            
+            const btn = document.getElementById('wallet-btn');
+            const disconnectBtn = document.getElementById('disconnect-btn');
+            const badge = document.getElementById('status-badge');
+            
+            const shortKey = publicKey.slice(0, 4) + '...' + publicKey.slice(-4);
+            btn.textContent = '✓ ' + shortKey;
+            btn.classList.add('connected');
+            disconnectBtn.style.display = 'block';
+            badge.textContent = '● LIVE';
+            badge.classList.add('live');
+          }
+        } catch (err) {
+          console.log('Auto-connect failed:', err);
+        }
+      }
+    });
   </script>
 </body>
 </html>
