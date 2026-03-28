@@ -72,7 +72,7 @@
       background-position: 0px 220px, 3px 220px, 151.5px 337.5px, 25px 24px, 28px 24px, 176.5px 150px, 50px 16px, 53px 16px, 201.5px 91px, 75px 224px, 78px 224px, 226.5px 230.5px, 100px 19px, 103px 19px, 251.5px 121px, 125px 120px, 128px 120px, 276.5px 187px, 150px 31px, 153px 31px, 301.5px 120.5px, 175px 235px, 178px 235px, 326.5px 384.5px, 200px 121px, 203px 121px, 351.5px 228.5px, 225px 224px, 228px 224px, 376.5px 364.5px, 250px 26px, 253px 26px, 401.5px 105px, 275px 75px, 278px 75px, 426.5px 180px;
       background-repeat: repeat;
       animation: falling 150s linear infinite;
-      opacity: 0.35;
+      opacity: 0.25;
       pointer-events: none;
     }
 
@@ -88,7 +88,7 @@
       background-image: radial-gradient(circle at 50% 50%, transparent 0, transparent 2px, var(--void) 2px);
       background-size: 8px 8px;
       pointer-events: none;
-      opacity: 0.8;
+      opacity: 0.6;
     }
     
     @keyframes falling {
@@ -438,7 +438,7 @@
           <div class="manual-entry">
             <div class="manual-label">Or add contacts manually</div>
             <div class="contact-input-row">
-              <input type="email" class="contact-input" placeholder="email@example.com">
+              <input type="email" class="contact-input" placeholder="email@example.com" id="email-input">
               <button class="add-btn" onclick="addContact()">Add</button>
             </div>
             <div class="contact-list-preview" id="contact-list"></div>
@@ -496,29 +496,12 @@
           <div class="phase-title">Your Matches</div>
           <div class="phase-sub">These are your mutual contacts. Non-matches remain permanently hidden.</div>
           <div class="results-header">
-            <div><div class="results-count"><span>2</span> matches found</div></div>
+            <div><div class="results-count"><span id="match-count">0</span> matches found</div></div>
             <div class="results-badge">Verified on Solana</div>
           </div>
-          <div class="match-card">
-            <div class="match-avatar">A</div>
-            <div class="match-info">
-              <div class="match-name">Alice Morgan</div>
-              <div class="match-wallet">9B2e...4Kx7</div>
-              <div class="match-mutual">Mutual contact: alice@example.com</div>
-            </div>
-            <button class="match-action" onclick="contactMatch()">Contact</button>
-          </div>
-          <div class="match-card">
-            <div class="match-avatar">B</div>
-            <div class="match-info">
-              <div class="match-name">Bob Chen</div>
-              <div class="match-wallet">7xK3...9Lm2</div>
-              <div class="match-mutual">Mutual contact: bob@example.com</div>
-            </div>
-            <button class="match-action" onclick="contactMatch()">Contact</button>
-          </div>
+          <div id="matches-container"></div>
           <div class="non-matches-note">
-            3 contacts were not found in the other party's list. These remain hidden forever.
+            <span id="non-match-count">0</span> contacts were not found in the other party's list. These remain hidden forever.
           </div>
           <div class="privacy-proof">
             <div class="proof-title">Cryptographic Proof</div>
@@ -592,21 +575,40 @@
 </footer>
 
 <script>
+  let walletConnected = false;
+  let selectedWallet = null;
+  let contacts = [];
+
   function connectWallet() {
     const btn = document.getElementById('wallet-btn');
-    if (btn.classList.contains('connected')) {
+    if (walletConnected) {
+      walletConnected = false;
       btn.classList.remove('connected');
       btn.textContent = 'Connect Wallet';
+      showToast('Wallet disconnected', 'success');
     } else {
-      btn.classList.add('connected');
-      btn.textContent = 'Connected: 9B2e...4Kx7';
-      showToast('Wallet connected successfully', 'success');
+      // Check if Phantom or Backpack is installed
+      if (window.solana && (window.solana.isPhantom || window.solana.isBackpack)) {
+        window.solana.connect().then(response => {
+          walletConnected = true;
+          const publicKey = response.publicKey.toString();
+          const shortKey = publicKey.slice(0, 4) + '...' + publicKey.slice(-4);
+          btn.classList.add('connected');
+          btn.textContent = 'Connected: ' + shortKey;
+          showToast('Wallet connected successfully', 'success');
+        }).catch(err => {
+          showToast('Failed to connect wallet: ' + err.message, 'error');
+        });
+      } else {
+        showToast('Please install Phantom or Backpack wallet', 'error');
+      }
     }
   }
 
   function selectWallet(el, wallet) {
     document.querySelectorAll('.wallet-option').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
+    selectedWallet = wallet;
     showToast(`${wallet.charAt(0).toUpperCase() + wallet.slice(1)} wallet selected`, 'success');
   }
 
@@ -624,12 +626,84 @@
   function handleFileUpload(e) {
     const file = e.target.files[0];
     if (file) {
-      showToast(`File "${file.name}" uploaded successfully`, 'success');
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const csv = event.target.result;
+        const lines = csv.split('\n');
+        contacts = [];
+        
+        lines.forEach((line, index) => {
+          if (line.trim() && index > 0) {
+            const parts = line.split(',');
+            if (parts[0]) {
+              const email = parts[0].trim().toLowerCase();
+              if (email.includes('@')) {
+                contacts.push(email);
+              }
+            }
+          }
+        });
+        
+        displayContacts();
+        showToast(`Loaded ${contacts.length} contacts from "${file.name}"`, 'success');
+      };
+      reader.readAsText(file);
     }
   }
 
   function addContact() {
-    showToast('Contact added to list', 'success');
+    const input = document.getElementById('email-input');
+    const email = input.value.trim().toLowerCase();
+    
+    if (!email.includes('@')) {
+      showToast('Please enter a valid email address', 'error');
+      return;
+    }
+    
+    if (!contacts.includes(email)) {
+      contacts.push(email);
+      displayContacts();
+      input.value = '';
+      showToast('Contact added successfully', 'success');
+    } else {
+      showToast('Contact already exists', 'error');
+    }
+  }
+
+  function displayContacts() {
+    const list = document.getElementById('contact-list');
+    list.innerHTML = '';
+    
+    contacts.forEach((contact, index) => {
+      const div = document.createElement('div');
+      div.className = 'contact-preview-item';
+      const initials = contact.split('@')[0].substring(0, 2).toUpperCase();
+      div.innerHTML = `
+        <div class="contact-preview-left">
+          <div style="width:28px;height:28px;border-radius:50%;background:rgba(0,229,204,0.12);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">${initials}</div>
+          <div>${contact}</div>
+          <div class="contact-hash">${hashEmail(contact)}</div>
+        </div>
+        <button class="remove-btn" onclick="removeContact(${index})">x</button>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function removeContact(index) {
+    contacts.splice(index, 1);
+    displayContacts();
+    showToast('Contact removed', 'success');
+  }
+
+  function hashEmail(email) {
+    let hash = 0;
+    for (let i = 0; i < email.length; i++) {
+      const char = email.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).substring(0, 8);
   }
 
   function contactMatch() {
@@ -641,6 +715,9 @@
   }
 
   function startOver() {
+    contacts = [];
+    document.getElementById('contact-list').innerHTML = '';
+    document.getElementById('email-input').value = '';
     goToPhase(1);
     showToast('Starting over...', 'success');
   }
